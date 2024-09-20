@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoMotoSocial - Eventos</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDaeWicvigtP9xPv919E-RNoxfvC-Hqik&callback=iniciarMap" async defer></script>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <main class="events-container">
+        <div class="events-header">
+            <h1>Eventos</h1>
+            <button class="new-event-btn" onclick="openModal()">Nuevo Evento</button>
+        </div>
+
+        <div class="event-card">
+            <h2 class="event-title">Rally de Motocicletas Clásicas</h2>
+            <p class="event-description">Únete a nosotros para un emocionante rally de motocicletas clásicas. Recorreremos las hermosas carreteras costeras y disfrutaremos de la camaradería de otros entusiastas de las motos clásicas.</p>
+            <div class="event-details">
+                <span class="event-detail">15 de Junio, 2023</span>
+                <span class="event-detail">10:00 AM</span>
+                <span class="event-detail">Playa del Carmen, México</span>
+            </div>
+            <span class="event-hashtag">#RallyMotoClásica</span>
+            <div class="event-map" id="map1" style="height: 300px; width: 100%;"></div>
+        </div>
+
+        <div class="event-card">
+            <h2 class="event-title">Exposición de Autos Eléctricos</h2>
+            <p class="event-description">Ven a explorar el futuro de la automoción en nuestra exposición de autos eléctricos. Verás los últimos modelos, aprenderás sobre la tecnología de vanguardia y podrás hacer pruebas de manejo.</p>
+            <div class="event-details">
+                <span class="event-detail">22 de Julio, 2023</span>
+                <span class="event-detail">9:00 AM - 6:00 PM</span>
+                <span class="event-detail">Centro de Convenciones, Ciudad de México</span>
+            </div>
+            <span class="event-hashtag">#ExpoAutoEléctrico</span>
+            <div class="event-map" id="map2" style="height: 300px; width: 100%;"></div>
+        </div>
+    </main>
+
+    <div id="newEventModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Crear Nuevo Evento</h2>
+            <form id="newEventForm">
+                <div class="form-group">
+                    <label for="eventTitle">Título</label>
+                    <input type="text" id="eventTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Descripción</label>
+                    <textarea id="eventDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="eventLocation">Ubicación</label>
+                    <input type="text" id="eventLocation" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Fecha</label>
+                    <input type="date" id="eventDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventTime">Hora</label>
+                    <input type="time" id="eventTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventHashtag">Hashtag</label>
+                    <input type="text" id="eventHashtag" required>
+                </div>
+                <button type="submit" class="submit-btn">Crear Evento</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("header-placeholder").innerHTML = fetch('../partials/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById("header-placeholder").innerHTML = data);
+
+        function openModal() {
+            document.getElementById("newEventModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("newEventModal").style.display = "none";
+        }
+
+        document.getElementById("newEventForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            // Aquí iría la lógica para procesar el formulario y crear un nuevo evento
+            alert("Evento creado con éxito!");
+            closeModal();
+        });
+
+        // Cerrar el modal si se hace clic fuera de él
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("newEventModal")) {
+                closeModal();
+            }
+        }
+
+        // Simulación de carga de mapas de Google
+        function iniciarMap() {
+            const locations = [
+                { id: 'map1', lat: 20.6296, lng: -87.0739 }, // Playa del Carmen
+                { id: 'map2', lat: 19.4270, lng: -99.1677 }  // Ciudad de México
+            ];
+
+            locations.forEach(location => {
+                const map = new google.maps.Map(document.getElementById(location.id), {
+                    zoom: 12,
+                    center: { lat: location.lat, lng: location.lng }
+                });
+
+                new google.maps.Marker({
+                    position: { lat: location.lat, lng: location.lng },
+                    map: map
+                });
+            });
+        }
+    </script>
+</body>
+</html>

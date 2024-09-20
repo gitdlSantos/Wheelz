@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoMotoSocial - Mensajes Privados</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <div class="messages-container">
+        <div class="conversations-list">
+            <div class="conversation-item active">
+                <div class="message-profile-pic">
+                    <img src="https://via.placeholder.com/50" alt="Foto de perfil de Juan">
+                </div>
+                <div class="conversation-info">
+                    <div class="conversation-name">Juan Pérez</div>
+                    <div class="conversation-preview">Hola, ¿cómo estás?</div>
+                </div>
+            </div>
+            <div class="conversation-item">
+                <div class="message-profile-pic">
+                    <img src="https://via.placeholder.com/50" alt="Foto de perfil de María">
+                </div>
+                <div class="conversation-info">
+                    <div class="conversation-name">María García</div>
+                    <div class="conversation-preview">¿Nos vemos en el e...</div>
+                </div>
+            </div>
+            <div class="conversation-item">
+                <div class="message-profile-pic">
+                    <img src="https://via.placeholder.com/50" alt="Foto de perfil de Carlos">
+                </div>
+                <div class="conversation-info">
+                    <div class="conversation-name">Carlos Rodríguez</div>
+                    <div class="conversation-preview">¿Qué opinas del nu...</div>
+                </div>
+            </div>
+        </div>
+        <div class="chat-area">
+            <div class="chat-header">
+                <div class="profile-pic">
+                    <img src="https://via.placeholder.com/50" alt="Foto de perfil de Juan">
+                </div>
+                <div class="conversation-name">Juan Pérez</div>
+            </div>
+            <div class="chat-messages">
+                <div class="message received">
+                    Hola, ¿cómo estás?
+                </div>
+                <div class="message sent">
+                    ¡Hola Juan! Estoy bien, gracias. ¿Y tú?
+                </div>
+                <div class="message received">
+                    Muy bien, gracias. ¿Vas a ir al rally este fin de semana?
+                </div>
+                <div class="message sent">
+                    Sí, estoy planeando ir. ¿Tú también vas?
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Escribe un mensaje...">
+                <button>Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("header-placeholder").innerHTML = fetch('../partials/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById("header-placeholder").innerHTML = data);
+
+        // Simulación de selección de conversación
+        document.querySelectorAll('.conversation-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.conversation-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                // Aquí se actualizaría el área de chat con los mensajes correspondientes
+            });
+        });
+    </script>
+</body>
+</html>

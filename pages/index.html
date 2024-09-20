@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed de Red Social</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <main>
+        <div class="contenedor-ventana" id="contenedor-ventana">
+            <div class="ventana-reporte">
+                <button id="reportar-publicacion" onclick="">Reportar Publicacion</button>
+                <p></p>
+                <button id="cancelar-reporte" onclick="cancelar_reporte()">Cancelar</button>
+            </div>
+        </div>
+
+        <div class="post-container">
+            <div class="post">
+                <div class="post-header">
+                    <div class="profile-pic">
+                        <img src="https://via.placeholder.com/30" alt="Foto de perfil" class="profile-image">
+                    </div>
+                    <h3 class="nombre_usuario">pedrito720</h3>
+                    <button class="report-btn" id="abrir-reporte" onclick="abrir_reporte()">
+                        <img src="https://www.svgrepo.com/show/479045/exclamation-mark.svg" alt="Reportar">
+                    </button> 
+                </div>
+                <div class="media-content">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkCGBSi_A9yj2tqInsm4PR9Cphn7anwcHtwg&s" alt="Descripción de la imagen" />
+                </div>
+                <div class="post-content">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor veniam commodi labore repudiandae sed neque, unde illo.
+                    Deleniti voluptatibus a quos pariatur vero placeat quasi, nesciunt repudiandae nisi asperiores. Voluptatem!</p>
+                    <span class="date">Fecha</span>
+                </div>
+                <div class="post-footer">
+                    <button class="like-btn">
+                        <img src="https://www.svgrepo.com/show/473234/heart.svg" alt="Me gusta" class="heart-icon">
+                    </button>
+                    <button class="comment-btn">
+                        <img src="https://www.svgrepo.com/show/473144/comment-right.svg" alt="Comentarios">
+                    </button>
+                    <button>
+                        <img src="https://www.svgrepo.com/show/379628/share.svg" alt="Compartir">
+                    </button>
+                </div>
+            </div>
+
+            <div class="comments-section">
+                <h3>Comentarios</h3>
+                <div class="comment">
+                    <div class="comment-header">
+                        <img src="https://via.placeholder.com/30" alt="Foto de perfil" class="comment-profile-pic">
+                        <span class="comment-username">usuario123</span>
+                    </div>
+                    <div class="comment-content">
+                        <p>¡Gran publicación! Me encanta el contenido.</p>
+                    </div>
+                    <div class="comment-actions">
+                        <button class="comment-like-btn">Me gusta</button>
+                        <button class="comment-reply-btn">Responder</button>
+                        <button class="toggle-replies-btn">Ocultar respuestas</button>
+                    </div>
+                    <div class="replies hidden"></div> <!-- Las respuestas se agregarán aquí. -->
+                </div>
+                <div class="new-comment-form">
+                    <input type="text" class="new-comment-input" placeholder="Escribe un comentario...">
+                    <div class="new-comment-actions">
+                        <button class="post-comment-btn">Comentar</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <script>
+        document.getElementById("header-placeholder").innerHTML = fetch('../partials/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById("header-placeholder").innerHTML = data);
+    
+        document.getElementById("footer-placeholder").innerHTML = fetch('partials/footer.html')
+            .then(response => response.text())
+            .then(data => document.getElementById("footer-placeholder").innerHTML = data);
+    
+    </script>
+    
+    <script src="../assets/js/app.js"></script>
+</body>
+</html>

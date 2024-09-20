@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheelz - Foros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="forums-container">
+        <div class="forums-header">
+            <h1>Foros</h1>
+        </div>
+        <button class="new-post-btn" onclick="openModal()">Nueva Publicación</button>
+
+        <div class="forum-post">
+            <div class="post-header">
+                <div>
+                    <h2 class="post-title">Mejores rutas de motocicleta en California</h2>
+                    <p class="post-meta">Publicado por RoadKing123 el 15 de mayo de 2023</p>
+                </div>
+                <button class="report-btn">!</button>
+            </div>
+            <div class="post-content">
+                <p>¡Hola compañeros motociclistas! Estoy planeando un viaje a California y busco algunas rutas épicas
+                    para motocicleta. ¿Alguna sugerencia?</p>
+            </div>
+            <div class="post-tags">
+                <span class="tag">Viajes</span>
+                <span class="tag">#CaliforniaRiding</span>
+                <span class="tag">#MotorcycleTrips</span>
+            </div>
+            <div class="post-actions">
+                <div>
+                    <button class="like-btn">
+                        <img src="https://www.svgrepo.com/show/473234/heart.svg" alt="Me gusta" class="heart-icon">
+                    </button>
+                    <button>
+                        <img src="https://www.svgrepo.com/show/473144/comment-right.svg" alt="Comentarios">
+                    </button>
+                </div>
+                <button>
+                    <img src="https://www.svgrepo.com/show/379628/share.svg" alt="Compartir">
+                </button>
+            </div>
+        </div>
+
+        <div class="forum-post">
+            <div class="post-header">
+                <div>
+                    <h2 class="post-title">Nuevos modelos de coches eléctricos para 2024</h2>
+                    <p class="post-meta">Publicado por EVEnthusiast el 14 de mayo de 2023</p>
+                </div>
+                <button class="report-btn">!</button>
+            </div>
+            <div class="post-content">
+                <p>He estado investigando sobre los próximos modelos de coches eléctricos para 2024. ¡Hay algunos
+                    lanzamientos emocionantes! ¿Qué opinan sobre el futuro de los vehículos eléctricos?</p>
+            </div>
+            <div class="post-tags">
+                <span class="tag">Vehículos Eléctricos</span>
+                <span class="tag">#ElectricCars</span>
+                <span class="tag">#FutureOfAutomotive</span>
+            </div>
+            <div class="post-actions">
+                <div>
+                    <button class="like-btn">
+                        <img src="https://www.svgrepo.com/show/473234/heart.svg" alt="Me gusta" class="heart-icon">
+                    </button>
+                    <button>
+                        <img src="https://www.svgrepo.com/show/473144/comment-right.svg" alt="Comentarios">
+                    </button>
+                </div>
+                <button>
+                    <img src="https://www.svgrepo.com/show/379628/share.svg" alt="Compartir">
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div id="newPostModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Crear Nueva Publicación</h2>
+            <form id="newPostForm">
+                <div class="form-group">
+                    <label for="postTitle">Título</label>
+                    <input type="text" id="postTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="postContent">Contenido</label>
+                    <textarea id="postContent" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="postCategory">Categoría</label>
+                    <input type="text" id="postCategory" required>
+                </div>
+                <div class="form-group">
+                    <label for="postHashtags">Hashtags (separados por comas)</label>
+                    <input type="text" id="postHashtags">
+                </div>
+                <div class="form-group">
+                    <label for="postMedia">Subir Multimedia</label>
+                    <input type="file" id="postMedia">
+                </div>
+                <button type="submit" class="submit-btn">Crear Publicación</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("header-placeholder").innerHTML = fetch('../partials/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById("header-placeholder").innerHTML = data);
+
+        function openModal() {
+            document.getElementById("newPostModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("newPostModal").style.display = "none";
+        }
+
+        document.getElementById("newPostForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            // Aquí iría la lógica para procesar el formulario y crear una nueva publicación
+            alert("Publicación creada con éxito!");
+            closeModal();
+        });
+
+        // Cerrar el modal si se hace clic fuera de él
+        window.onclick = function (event) {
+            if (event.target == document.getElementById("newPostModal")) {
+                closeModal();
+            }
+        }
+    </script>
+
+    <script src="../assets/js/app.js"></script>
+</body>
+
+</html>

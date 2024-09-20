@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoMotoSocial - Notificaciones</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <div class="notifications-container">
+        <h1>Notificaciones</h1>
+
+        <div class="notification">
+            <div class="notification-avatar">
+                <img src="https://via.placeholder.com/40" alt="Avatar de Juan">
+            </div>
+            <div class="notification-content">
+                <div class="notification-text">
+                    <span class="notification-username">Juan Pérez</span>
+                    <span class="notification-action">le dio me gusta a tu publicación</span>
+                    <span class="notification-post">"Mi nuevo coche eléctrico"</span>
+                </div>
+                <div class="notification-time">Hace 5 minutos</div>
+            </div>
+        </div>
+
+        <div class="notification">
+            <div class="notification-avatar">
+                <img src="https://via.placeholder.com/40" alt="Avatar de María">
+            </div>
+            <div class="notification-content">
+                <div class="notification-text">
+                    <span class="notification-username">María García</span>
+                    <span class="notification-action">comentó en tu publicación:</span>
+                    <span class="notification-post">"¡Qué buena foto! Me..."</span>
+                </div>
+                <div class="notification-time">Hace 20 minutos</div>
+            </div>
+        </div>
+
+        <div class="notification">
+            <div class="notification-avatar">
+                <img src="https://via.placeholder.com/40" alt="Avatar de Carlos">
+            </div>
+            <div class="notification-content">
+                <div class="notification-text">
+                    <span class="notification-username">Carlos Rodríguez</span>
+                    <span class="notification-action">te mencionó en un comentario</span>
+                </div>
+                <div class="notification-time">Hace 1 hora</div>
+            </div>
+        </div>
+
+        <div class="notification">
+            <div class="notification-avatar">
+                <img src="https://via.placeholder.com/40" alt="Avatar de Ana">
+            </div>
+            <div class="notification-content">
+                <div class="notification-text">
+                    <span class="notification-username">Ana Martínez</span>
+                    <span class="notification-action">comenzó a seguirte</span>
+                </div>
+                <div class="notification-time">Hace 2 horas</div>
+            </div>
+            <button class="follow-btn">Seguir</button>
+        </div>
+
+        <div class="notification">
+            <div class="notification-avatar">
+                <img src="https://via.placeholder.com/40" alt="Avatar de Luis">
+            </div>
+            <div class="notification-content">
+                <div class="notification-text">
+                    <span class="notification-username">Luis Sánchez</span>
+                    <span class="notification-action">comenzó a seguirte</span>
+                </div>
+                <div class="notification-time">Hace 1 día</div>
+            </div>
+            <button class="follow-btn following">Siguiendo</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("header-placeholder").innerHTML = fetch('../partials/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById("header-placeholder").innerHTML = data);
+
+        // Simulación de la funcionalidad del botón "Seguir"
+        document.querySelectorAll('.follow-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('following');
+                this.textContent = this.classList.contains('following') ? 'Siguiendo' : 'Seguir';
+            });
+        });
+    </script>
+</body>
+</html>
