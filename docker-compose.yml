@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: tri_force_3
+      MYSQL_DATABASE: Wheelz
+      MYSQL_USER: guzman
+      MYSQL_PASSWORD: guzman185
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - app-network
+    ports:
+      - "3307:3307"
+
+  php:
+    image: php:8.0-fpm
+    volumes:
+      - ./api:/var/www/html
+    networks:
+      - app-network
+    depends_on:
+      - db
+
+  web:
+    image: nginx:latest
+    volumes:
+      - ./html:/var/www/html
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
+    depends_on:
+      - php
+
+networks:
+  app-network:
+
+volumes:
+  db-data:
