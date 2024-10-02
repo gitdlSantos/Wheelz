@@ -71,12 +71,12 @@ if (!isset($_SESSION['user_id'])) {
     <div id="footer-placeholder"></div>
 
     <script>
-        document.getElementById("header-placeholder").innerHTML = fetch('../partials/header.html')
+        document.getElementById("header-placeholder").innerHTML = fetch('partials/header.html')
             .then(response => response.text())
             .then(data => document.getElementById("header-placeholder").innerHTML = data);
     </script>
 
-    <script src="../assets/js/app.js"></script> <!-- Carga del JavaScript -->
+    <script src="assets/js/app.js"></script> <!-- Carga del JavaScript -->
 
 
 </body>
