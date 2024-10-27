@@ -778,6 +778,32 @@ button {
     cursor: not-allowed;
 }
 
+#profile-picture {
+    display: none;
+}
+
+.profile-picture-label {
+    display: inline-block !important;
+    padding: 10px;
+    background-color: #64b5f6;
+    color: rgb(76, 64, 64) !important;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto cuando se selecciona una imagen */
+.profile-picture-label.selected {
+    background-color: #4ae25e;
+    transform: scale(1.05); /* Aumenta ligeramente el tamaño */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+}
+
+.profile-picture-label:hover {
+    background-color: #42a5f5;
+    transform: scale(1.02); /* Pequeña escala al pasar el mouse */
+}
+
 /* ============================================================================================================== */
 /* ============================================================================================================== */
 /* ============================================================================================================== */
