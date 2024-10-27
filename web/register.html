@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ingresar a Wheelz</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
+
 <body>
     <div class="login-register-container">
         <div class="login-register-box">
@@ -14,13 +17,16 @@
                 <h1>Wheelz</h1>
             </div>
             <!-------------------------------------------------------------------------------------------------->
-            <!------------------------------------CONTENEDOR DE LOGIN------------------------------------------->
+            <!----------------------------------------- PESTAÑAS ----------------------------------------------->
             <div class="login-register-tabs">
                 <button class="login-register-tab active" onclick="showTab('login')">Iniciar Sesión</button>
                 <button class="login-register-tab" onclick="showTab('register')">Registrarse</button>
             </div>
+
+            <!-------------------------------------------------------------------------------------------------->
+            <!------------------------------------CONTENEDOR DE LOGIN------------------------------------------->
             <div id="login" class="login-register-content active">
-                <form onsubmit="handleSubmit(event)" action="../api/login.php" method="POST">
+                <form id="login-form" onsubmit="handleSubmit(event, 'login')">
                     <div class="login-register-form-group">
                         <label for="login-email">Email</label>
                         <input id="login-email" name="email" type="email" placeholder="john@example.com" required>
@@ -35,7 +41,7 @@
             <!-------------------------------------------------------------------------------------------------->
             <!----------------------------------CONTENEDOR DE REGISTRO------------------------------------------>
             <div id="register" class="login-register-content">
-                <form onsubmit="handleSubmit(event)" action="../api/register.php" method="POST" enctype="multipart/form-data">
+                <form id="register-form" onsubmit="handleSubmit(event, 'register')" enctype="multipart/form-data">
                     <div class="login-register-form-group">
                         <label for="register-username">Nombre de usuario</label>
                         <input id="register-username" name="username" placeholder="johndoe" required>
@@ -54,11 +60,13 @@
                     </div>
                     <div class="login-register-form-group">
                         <label for="profile-picture">Foto de Perfil</label>
-                        <input id="profile-picture" name="profile_picture" type="file" accept="image/*" required>
+                        <input id="profile-picture" name="profile_picture" type="file" accept="image/*" required style="display: none;">
+                        <label class="profile-picture-label" for="profile-picture">Seleccionar Foto</label>
+                        <span id="file-selected-message" style="margin-left: 10px; color: #4ae25e; display: none;">Foto seleccionada</span>
                     </div>
                     <button type="submit" class="login-register-submit-btn">Registrarse</button>
                 </form>
-            </div>            
+            </div>
             <!-------------------------------------------------------------------------------------------------->
             <!-------------------------------------------------------------------------------------------------->
         </div>
@@ -67,13 +75,15 @@
         function showTab(tabName) {
             const tabs = document.querySelectorAll('.login-register-tab');
             const tabContents = document.querySelectorAll('.login-register-content');
-            
+
             tabs.forEach(tab => tab.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
-            
+
             document.querySelector(`.login-register-tab:nth-child(${tabName === 'login' ? '1' : '2'})`).classList.add('active');
             document.getElementById(tabName).classList.add('active');
         }
     </script>
+    <script src="./assets/js/app.js"></script>
 </body>
+
 </html>
