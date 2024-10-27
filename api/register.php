@@ -1,5 +1,5 @@
 <?php
-include 'config.php';  // Incluye tu archivo de conexión
+include 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
@@ -9,7 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validar si las contraseñas coinciden
     if ($password !== $confirm_password) {
-        die("Las contraseñas no coinciden.");
+        echo json_encode(['success' => false, 'message' => 'Las contraseñas no coinciden']);
+        exit;
     }
 
     // Encriptar la contraseña antes de guardarla
@@ -19,26 +20,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $target_dir = "../uploads/";
     $target_file = $target_dir . basename($_FILES["profile_picture"]["name"]);
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-    $allowed_types = array("jpg", "jpeg", "png");
+    $allowed_types = ["jpg", "jpeg", "png"];
 
     if (!in_array($imageFileType, $allowed_types)) {
-        die("Solo se permiten archivos JPG, JPEG y PNG.");
+        echo json_encode(['success' => false, 'message' => 'Solo se permiten archivos JPG, JPEG y PNG']);
+        exit;
     }
 
     if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $target_file)) {
         // Guardar los datos en la base de datos, incluyendo la ruta de la imagen
-        $foto_perfil = basename($_FILES["profile_picture"]["name"]); // Asignar a una variable
+        $foto_perfil = basename($_FILES["profile_picture"]["name"]);
         $query = "INSERT INTO usuarios (nombre_usuario, email, password, foto_perfil) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("ssss", $username, $email, $hashed_password, $foto_perfil); // Usar la variable
+        $stmt->bind_param("ssss", $username, $email, $hashed_password, $foto_perfil);
 
         if ($stmt->execute()) {
-            echo "Usuario registrado correctamente.";
+            echo json_encode(['success' => true, 'message' => 'Usuario registrado correctamente']);
         } else {
-            echo "Error al registrar el usuario.";
+            echo json_encode(['success' => false, 'message' => 'Error al registrar el usuario']);
         }
     } else {
-        echo "Error al subir la imagen.";
+        echo json_encode(['success' => false, 'message' => 'Error al subir la imagen']);
     }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Método de solicitud no permitido']);
 }
 ?>

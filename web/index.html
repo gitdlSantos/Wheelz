@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feed de Red Social</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -18,12 +17,29 @@
             </div>
         </div>
 
+        <div class="new-post-section">
+            <form id="newPostForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <div id="postContent" contenteditable="true" class="editable" placeholder="Escribe algo..."></div>
+                </div>
+                <div class="form-group file-input">
+                    <label for="postImages" class="image-upload-label">Selecciona hasta 4 imágenes</label>
+                    <input type="file" id="postImages" name="postImages[]" accept="image/*" multiple>
+                </div>
+                <button type="submit" class="post-submit-btn">Publicar</button>
+            </form>
+        </div>
+        
+        <div class="post-container" id="postContainer">
+            <!-- Aquí se añadirán los nuevos posts -->
+        </div>
+
         <div class="post-container">
             <div class="post">
                 <div class="post-header">
                     <div class="profile-pic">
-                        <img src="https://via.placeholder.com/30" alt="Foto de perfil" class="profile-image">
-                    </div>
+                        <img src="https://via.placeholder.com/30" alt="Foto de perfil" class="example-profile-image"> <!-- Cambié la clase -->
+                    </div>                
                     <h3 class="nombre_usuario">pedrito720</h3>
                     <button class="report-btn" id="abrir-reporte" onclick="abrir_reporte()">
                         <img src="https://www.svgrepo.com/show/479045/exclamation-mark.svg" alt="Reportar">
@@ -78,17 +94,14 @@
         </div>
     </main>
 
-    <script>
-        document.getElementById("header-placeholder").innerHTML = fetch('partials/header.html')
-            .then(response => response.text())
-            .then(data => document.getElementById("header-placeholder").innerHTML = data);
     
-        document.getElementById("footer-placeholder").innerHTML = fetch('partials/footer.html')
-            .then(response => response.text())
-            .then(data => document.getElementById("footer-placeholder").innerHTML = data);
-    
-    </script>
-    
-    <script src="assets/js/app.js"></script>
+<script src="http://localhost/Wheelz/web/assets/js/app.js"></script>
 </body>
+<script>
+    document.getElementById("header-placeholder").innerHTML = fetch('partials/header.html')
+        .then(response => response.text())
+        .then(data => document.getElementById("header-placeholder").innerHTML = data);
+</script>
+
+
 </html>

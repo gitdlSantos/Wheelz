@@ -3,9 +3,9 @@ Para agregar el header agregar estas lineas.
     <div id="header-placeholder"></div>
 
 <script>
-    document.getElementById("header-placeholder").innerHTML = fetch('../partials/header.html')
-        .then(response => response.text())
-        then(data => document.getElementById("header-placeholder").innerHTML = data);
+    document.getElementById("header-placeholder").innerHTML = fetch('partials/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById("header-placeholder").innerHTML = data);
 </script>
 
 Para footer:

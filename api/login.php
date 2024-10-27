@@ -1,6 +1,6 @@
 <?php
 include 'config.php';
-session_start(); // Iniciar la sesión para guardar datos del usuario
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
@@ -20,12 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user_id'] = $usuario['id'];
         $_SESSION['username'] = $usuario['nombre_usuario'];
 
+        echo json_encode(['success' => true, 'message' => 'Inicio de sesión exitoso']);
         // Redirigir a la página de inicio después del login exitoso
-        header("Location: ../pages/index.html");
+        header("Location: ../web/index.html");
         exit(); // Asegurarse de que el script se detenga después de la redirección
     } else {
-        // Mostrar mensaje de error si el login falla
-        echo "Email o contraseña incorrectos.";
+        echo json_encode(['success' => false, 'message' => 'Email o contraseña incorrectos']);
     }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Método de solicitud no permitido']);
 }
 ?>

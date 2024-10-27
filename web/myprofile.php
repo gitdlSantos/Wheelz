@@ -18,7 +18,7 @@ if (!isset($_SESSION['user_id'])) {
     <title>Perfil de Usuario</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
 <body>
@@ -42,6 +42,7 @@ if (!isset($_SESSION['user_id'])) {
             <div class="profile-actions">
                 <button class="edit-profile-btn">Editar perfil</button>
                 <button class="settings-btn">Configuracion</button>
+                <button id="logout-btn">Cerrar Sesión</button>
             </div>
         </div>
         <div class="edit-profile">

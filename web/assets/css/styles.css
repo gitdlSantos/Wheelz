@@ -157,6 +157,130 @@ main {
     padding: 20px;
 }
 
+.new-post-section {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px; /* Aumenta el padding */
+    background-color: #e3f2fd;
+    border: 1px solid #90caf9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Añade espacio entre elementos */
+    box-sizing: border-box; /* Asegura que padding y border no afecten el tamaño total */
+}
+
+.new-post-section .form-group {
+    margin-bottom: 10px;
+}
+
+.new-post-section input[type="text"],
+.editable {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.editable {
+    min-height: 80px;
+    overflow: auto;
+    background-color: #fff;
+}
+
+.editable[placeholder]:empty::before {
+    content: attr(placeholder);
+    color: #aaa;
+}
+
+.file-input {
+    position: relative;
+}
+
+.image-upload-label {
+    display: block;
+    padding: 10px;
+    background-color: #64b5f6;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 92%;
+}
+
+.file-input input[type="file"] {
+    display: none;
+}
+
+.new-post-section input[type="text"],
+.new-post-section textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.new-post-section input[type="file"] {
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.new-post-section .submit-btn {
+    background-color: #1DA1F2;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+}
+
+.new-post-section .submit-btn:hover {
+    background-color: #1a91da;
+}
+
+.file-input label {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #64b5f6;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.file-input input[type="file"] {
+    display: none;
+}
+
+.post-submit-btn {
+    background-color: #1e88e5;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.post-submit-btn:hover {
+    background-color: #1565c0;
+}
+
+.post-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 0 auto;
+}
+
 
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 /*//////////////////////////////////////// VENTANA DE REPORTE ///////////////////////////////////////////////*/
@@ -209,8 +333,8 @@ main {
 
 .post-container {
     display: flex;
-    justify-content: space-between;
-    max-width: 1200px;
+    flex-direction: column;
+    gap: 20px; /* Espacio entre posts */
     margin: 0 auto;
 }
 .post {
@@ -1091,6 +1215,22 @@ button {
 .settings-btn {
     background-color: #4b5563;
 }
+
+#logout-btn {
+    background-color: #ff4b4b; /* Rojo brillante */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#logout-btn:hover {
+    background-color: #ff1f1f; /* Cambiar a un rojo más oscuro al pasar el mouse */
+}
+
 
 .profile-content {
     margin-top: 20px;
