@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feed de Red Social</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -95,13 +95,15 @@
     </main>
 
     
-<script src="http://localhost/Wheelz/web/assets/js/app.js"></script>
-</body>
+<script src="./assets/js/app.js"></script>
 <script>
-    document.getElementById("header-placeholder").innerHTML = fetch('partials/header.html')
+    fetch('./partials/header.html')
         .then(response => response.text())
-        .then(data => document.getElementById("header-placeholder").innerHTML = data);
+        .then(data => {
+            document.getElementById("header-placeholder").innerHTML = data;
+        })
+        .catch(error => console.error('Error cargando el header:', error));
 </script>
-
+</body>
 
 </html>
