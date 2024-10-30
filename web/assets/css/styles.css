@@ -1159,129 +1159,115 @@ button {
 /* ============================================================================================================== */
 
 /* Estilos adicionales para la pÃ¡gina de perfil */
+/* Estilos adicionales para la página de perfil */
 .profile-container {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
-}
-
-.profile-pic-header {
-    margin: 10px
-}
-
-.profile-pic-header img {
-    width: 125px;
-    height: 125px;
-    border-radius: 100px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .profile-header {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-    background-color: #fff;
     padding: 20px;
+    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.profile-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.profile-pic-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 130px;
+    height: 130px;
+    margin-right: 20px;
 }
 
-.my-profile-image {
+.profile-pic-header img {
     width: 100%;
     height: 100%;
+    border-radius: 50%;
     object-fit: cover;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.profile-pic-header img:hover {
+    transform: scale(1.05); /* Efecto de agrandamiento al pasar el ratón */
 }
 
 .profile-info {
-    flex-grow: 1;
+    flex: 1;
 }
 
-.username {
-    font-size: 24px;
+.profile-username {
+    font-size: 1.5rem;
     font-weight: bold;
-    margin-bottom: 5px;
+    color: #333;
+    margin: 0;
 }
 
-.name {
-    font-size: 18px;
+.profile-bio {
     color: #666;
-    margin-bottom: 10px;
-}
-
-.bio {
-    margin-bottom: 10px;
+    font-size: 1rem;
+    margin: 5px 0 10px;
 }
 
 .profile-stats {
-    display: flex;
-    gap: 20px;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.profile-stats span {
+    margin: 0 10px;
 }
 
 .profile-actions {
     display: flex;
-    flex-direction: column;
     gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-.edit-profile-btn,
-.settings-btn {
-    padding: 10px 20px;
-    background-color: #3b82f6;
-    color: white;
+.edit-profile-btn, .settings-btn, #logout-btn {
+    padding: 10px 15px;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
-}
-
-.settings-btn {
-    background-color: #4b5563;
-}
-
-#logout-btn {
-    background-color: #ff4b4b; /* Rojo brillante */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
+.edit-profile-btn {
+    background-color: #4285f4;
+    color: #fff;
+}
+
+.edit-profile-btn:hover {
+    background-color: #357ae8;
+}
+
+.settings-btn {
+    background-color: #666;
+    color: #fff;
+}
+
+.settings-btn:hover {
+    background-color: #555;
+}
+
+#logout-btn {
+    background-color: #e53935;
+    color: #fff;
+}
+
 #logout-btn:hover {
-    background-color: #ff1f1f; /* Cambiar a un rojo más oscuro al pasar el mouse */
-}
-
-
-.profile-content {
-    margin-top: 20px;
-}
-
-.posts-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-@media (max-width: 768px) {
-    .profile-header {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .profile-pic {
-        margin-right: 0;
-        margin-bottom: 20px;
-    }
-
-    .profile-actions {
-        margin-top: 20px;
-    }
+    background-color: #d32f2f;
 }
 
 /* ============================================================================================================== */
