@@ -1,3 +1,5 @@
+
+
 document.addEventListener("DOMContentLoaded", function () {
 
     // ========= LOGOUT
@@ -70,23 +72,20 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch(apiUrl, {
                 method: "POST",
-                headers: type === 'login' ? { "Content-Type": "application/json" } : {},
-                body: type === 'login' ? dataToSend : formData,
+                headers: type === 'login' ? { "Content-Type": "application/json" } : {}, // Solo JSON en login
+                body: dataToSend
             });
 
             const result = await response.json();
             if (response.ok) {
-                console.log(type === 'login' ? "Inicio de sesión exitoso" : "Registro exitoso");
-                console.log("Respuesta de la API:", result);
-
+                alert(type === 'login' ? "Inicio de sesión exitoso" : "Registro exitoso");
+                console.log("Token obtenido:", result.token);
                 if (type === 'login') {
+                    localStorage.setItem("token", result.token); // Guardar el token
                     window.location.href = "http://localhost/Wheelz/web/index.html";
-                } else {
-                    alert("Registro exitoso. Ya puedes iniciar sesión.");
-                    window.location.href = "http://localhost/Wheelz/web/register.html";
                 }
             } else {
-                console.error("Respuesta de la API:", result);
+                console.error("Error en la solicitud:", result);
                 alert(result.message || "Error en la solicitud");
             }
         } catch (error) {
@@ -97,4 +96,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.handleSubmit = handleSubmit;
 
+    if (window.location.pathname.includes("register.html")) return;
+    const token = localStorage.getItem("token");
+    if (!token) {
+        window.location.href = "register.html";
+    }
 });

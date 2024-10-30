@@ -67,15 +67,16 @@ switch ($method) {
         } elseif ($request[0] === 'login') {
             // Decodificar JSON y mostrarlo para depuración
             $data = json_decode(file_get_contents("php://input"), true);
+            error_log("JSON recibido en login: " . file_get_contents("php://input"));
             error_log("Datos JSON Decodificados: " . print_r($data, true));
-        
+
             // Si $data es null, significa que no se pudo decodificar JSON
             if ($data === null) {
                 echo json_encode(["message" => "Error al decodificar JSON"]);
                 http_response_code(400);
                 exit;
             }
-        
+
             // Verificar que se hayan recibido email y password en $data
             if (empty($data['email']) || empty($data['password'])) {
                 error_log("Campos faltantes en datos decodificados: " . print_r($data, true));
@@ -83,31 +84,33 @@ switch ($method) {
                 http_response_code(400);
                 exit;
             }
-        
+
             // Procesar el inicio de sesión con email y password
             $email = $conn->real_escape_string($data['email']);
             $password = md5($data['password']); // Encriptar la contraseña con md5
-        
+
             // Verificar el usuario en la base de datos
             $sql = "SELECT * FROM usuarios WHERE email = '$email' AND password = '$password'";
             $result = $conn->query($sql);
-        
+
             if ($result->num_rows > 0) {
+                session_start(); // Inicia la sesión si no se ha iniciado
                 // Generar un token y guardarlo en la base de datos
                 $user = $result->fetch_assoc();
                 $token = md5($user['email'] . $user['password'] . time()); // Generación de un token único
-        
+            
+                // Guardar el token y el user_id en la sesión
+                $_SESSION['token'] = $token;
+                $_SESSION['user_id'] = $user['id']; // <--- Agrega esta línea para guardar el ID del usuario
+            
                 // Guardar el token en la base de datos
                 $updateTokenSQL = "UPDATE usuarios SET token = '$token' WHERE id = {$user['id']}";
                 $conn->query($updateTokenSQL);
-        
+            
                 http_response_code(200);
                 echo json_encode(["message" => "Inicio de sesión exitoso", "token" => $token]);
-            } else {
-                http_response_code(401);
-                echo json_encode(["message" => "Credenciales incorrectas"]);
             }
-        }        
+        }
 
         if ($request[0] === 'logout') {
             // Verificar que el token esté presente en el encabezado
@@ -131,6 +134,34 @@ switch ($method) {
             } else {
                 http_response_code(400);
                 echo json_encode(["message" => "Token de autorización requerido"]);
+            }
+        }
+
+        if ($request[0] === 'validate_session') {
+            // Endpoint para validar el token de sesión
+            $headers = getallheaders();
+            if (isset($headers['Authorization'])) {
+                $token = str_replace('Bearer ', '', $headers['Authorization']);
+
+                // Consulta para verificar el token
+                $stmt = $conn->prepare("SELECT id FROM usuarios WHERE token = ?");
+                $stmt->bind_param("s", $token);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                    // Token válido
+                    http_response_code(200);
+                    echo json_encode(["success" => true, "message" => "Token válido"]);
+                } else {
+                    // Token inválido o no encontrado
+                    http_response_code(401);
+                    echo json_encode(["success" => false, "message" => "Token inválido o expirado"]);
+                }
+                $stmt->close();
+            } else {
+                http_response_code(400);
+                echo json_encode(["success" => false, "message" => "Token no proporcionado"]);
             }
         }
         break;
