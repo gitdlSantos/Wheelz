@@ -18,7 +18,7 @@ $responsePosts = file_get_contents($apiUrlPosts, false, stream_context_create($o
 
 if ($responsePosts) {
     $postsData = json_decode($responsePosts, true);
-    $totalPosts = $postsData['total'] ?? 0;
+    $totalPosts = $postsData['Publicaciones total'] ?? 0;
 } else {
     $totalPosts = 0;
     echo "Error: No se pudo obtener la información de publicaciones.";
@@ -30,8 +30,8 @@ $responseFollowers = file_get_contents($apiUrlFollowers, false, stream_context_c
 
 if ($responseFollowers) {
     $followersData = json_decode($responseFollowers, true);
-    $followersCount = $followersData['followers_count'] ?? 0;
-    $followingCount = $followersData['following_count'] ?? 0;
+    $followersCount = $followersData['followers'] ?? 0;
+    $followingCount = $followersData['following'] ?? 0;
 } else {
     $followersCount = 0;
     $followingCount = 0;
