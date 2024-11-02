@@ -73,60 +73,76 @@ switch ($method) {
         }
         break;
 
-    case 'PUT':
-        // Obtener datos de la solicitud PUT en formato JSON
-        $data = json_decode(file_get_contents("php://input"), true);
-
-        // Validar que el id y el contenido están presentes
-        if (isset($data['id']) && isset($data['contenido'])) {
-            $id = intval($data['id']);
-            $contenido = $conn->real_escape_string($data['contenido']);
-
-            // Actualizar el contenido del post
-            $sql = "UPDATE posts SET contenido = '$contenido' WHERE id = $id";
-
-            if ($conn->query($sql) === TRUE) {
-                // Respuesta de éxito
-                http_response_code(200);
-                echo json_encode(["message" => "Contenido actualizado exitosamente"]);
+        case 'PUT':
+            // Obtener datos de la solicitud PUT en formato JSON
+            $data = json_decode(file_get_contents("php://input"), true);
+        
+            // Validar que el id, usuario_id y contenido están presentes
+            if (isset($data['id']) && isset($data['contenido']) && isset($data['usuario_id'])) {
+                $id = intval($data['id']);
+                $contenido = $conn->real_escape_string($data['contenido']);
+                $usuario_id = intval($data['usuario_id']);
+        
+                // Verificar si el usuario es el propietario del post
+                $check_sql = "SELECT usuario_id FROM posts WHERE id = $id";
+                $check_result = $conn->query($check_sql);
+                $post_data = $check_result->fetch_assoc();
+        
+                if ($post_data && $post_data['usuario_id'] == $usuario_id) {
+                    // Actualizar el contenido del post
+                    $sql = "UPDATE posts SET contenido = '$contenido' WHERE id = $id";
+        
+                    if ($conn->query($sql) === TRUE) {
+                        http_response_code(200);
+                        echo json_encode(["message" => "Contenido actualizado exitosamente"]);
+                    } else {
+                        http_response_code(500);
+                        echo json_encode(["message" => "Error al actualizar el contenido"]);
+                    }
+                } else {
+                    http_response_code(403);
+                    echo json_encode(["message" => "No tienes permiso para modificar este post"]);
+                }
             } else {
-                // Respuesta de error de actualización
-                http_response_code(500);
-                echo json_encode(["message" => "Error al actualizar el contenido"]);
+                http_response_code(400);
+                echo json_encode(["message" => "ID, contenido y usuario_id son requeridos"]);
             }
-        } else {
-            // Respuesta de error de validación
-            http_response_code(400);
-            echo json_encode(["message" => "ID y contenido son requeridos"]);
-        }
-        break;
+            break;
 
-    case 'DELETE':
-        // Obtener datos de la solicitud DELETE en formato JSON
-        $data = json_decode(file_get_contents("php://input"), true);
-
-        // Validar que el id está presente
-        if (isset($data['id'])) {
-            $id = intval($data['id']);
-
-            // Eliminar el post con el ID especificado
-            $sql = "DELETE FROM posts WHERE id = $id";
-
-            if ($conn->query($sql) === TRUE) {
-                // Respuesta de éxito
-                http_response_code(200);
-                echo json_encode(["message" => "Post eliminado exitosamente"]);
-            } else {
-                // Respuesta de error al eliminar
-                http_response_code(500);
-                echo json_encode(["message" => "Error al eliminar el post"]);
-            }
-        } else {
-            // Respuesta de error de validación
-            http_response_code(400);
-            echo json_encode(["message" => "ID es requerido"]);
-        }
-        break;
+            case 'DELETE':
+                // Obtener datos de la solicitud DELETE en formato JSON
+                $data = json_decode(file_get_contents("php://input"), true);
+            
+                // Validar que el id y usuario_id están presentes
+                if (isset($data['id']) && isset($data['usuario_id'])) {
+                    $id = intval($data['id']);
+                    $usuario_id = intval($data['usuario_id']);
+            
+                    // Verificar si el usuario es el propietario del post
+                    $check_sql = "SELECT usuario_id FROM posts WHERE id = $id";
+                    $check_result = $conn->query($check_sql);
+                    $post_data = $check_result->fetch_assoc();
+            
+                    if ($post_data && $post_data['usuario_id'] == $usuario_id) {
+                        // Eliminar el post con el ID especificado
+                        $sql = "DELETE FROM posts WHERE id = $id";
+            
+                        if ($conn->query($sql) === TRUE) {
+                            http_response_code(200);
+                            echo json_encode(["message" => "Post eliminado exitosamente"]);
+                        } else {
+                            http_response_code(500);
+                            echo json_encode(["message" => "Error al eliminar el post"]);
+                        }
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(["message" => "No tienes permiso para eliminar este post"]);
+                    }
+                } else {
+                    http_response_code(400);
+                    echo json_encode(["message" => "ID y usuario_id son requeridos"]);
+                }
+                break;
 
     default:
         // Método no soportado
