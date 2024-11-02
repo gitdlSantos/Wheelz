@@ -96,10 +96,13 @@ switch ($method) {
                 $foros_sql = "SELECT COUNT(*) AS foros FROM foros WHERE usuario_id = $usuario_id";
                 $foros_count = $conn->query($foros_sql)->fetch_assoc()['foros'];
 
+                $total = $posts_count + $eventos_count + $foros_count;
+
                 echo json_encode([
                     "posts" => $posts_count,
                     "eventos" => $eventos_count,
-                    "foros" => $foros_count
+                    "foros" => $foros_count,
+                    "Publicaciones total" => $total
                 ]);
             } else {
                 http_response_code(400);
@@ -122,27 +125,6 @@ switch ($method) {
                 }
 
                 echo json_encode(["followers" => $followers]);
-            } else {
-                http_response_code(400);
-                echo json_encode(["message" => "Usuario no especificado"]);
-            }
-        } elseif (isset($request[0]) && $request[0] === 'list_following') {
-            // Obtener la lista de usuarios seguidos por un usuario
-            if (isset($_GET['usuario_id'])) {
-                $usuario_id = intval($_GET['usuario_id']);
-
-                $following_sql = "SELECT u.nombre_usuario, u.foto_perfil 
-                                      FROM seguidores s
-                                      JOIN usuarios u ON s.seguido_id = u.id
-                                      WHERE s.usuario_id = $usuario_id";
-                $result = $conn->query($following_sql);
-                $following = [];
-
-                while ($row = $result->fetch_assoc()) {
-                    $following[] = $row;
-                }
-
-                echo json_encode(["following" => $following]);
             } else {
                 http_response_code(400);
                 echo json_encode(["message" => "Usuario no especificado"]);
