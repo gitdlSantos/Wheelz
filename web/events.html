@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoMotoSocial - Eventos</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="./assets/js/app.js" defer></script>
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="events-container">
+        <div class="events-header">
+            <h1>Eventos</h1>
+        </div>
+        <button class="new-event-btn" onclick="openModal()">Nuevo Evento</button>
+
+        <!-- Contenedor para los eventos cargados dinámicamente -->
+        <div id="event-list"></div>
+    </main>
+
+    <!-- Modal para crear un nuevo evento -->
+    <div id="newEventModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Crear Nuevo Evento</h2>
+            <form id="newEventForm">
+                <div class="form-group">
+                    <label for="eventTitle">Título</label>
+                    <input type="text" id="eventTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Descripción</label>
+                    <textarea id="eventDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="eventLocation">Ubicación</label>
+                    <input type="text" id="eventLocation" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Fecha</label>
+                    <input type="date" id="eventDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventTime">Hora</label>
+                    <input type="time" id="eventTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventHashtag">Hashtag</label>
+                    <input type="text" id="eventHashtag" required>
+                </div>
+                <button type="submit" class="submit-btn">Crear Evento</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function openModal() {
+            const modal = document.getElementById("newEventModal");
+            if (modal) modal.style.display = "block";
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("newEventModal");
+            if (modal) modal.style.display = "none";
+        }
+
+        // Mantén el event listener para cargar eventos y el resto del código.
+        window.addEventListener("load", function () {
+            fetch('partials/header.html')
+                .then(response => response.text())
+                .then(data => document.getElementById("header-placeholder").innerHTML = data);
+
+            document.getElementById("newEventForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                // Capturar los datos del formulario
+                const formData = {
+                    usuario_id: localStorage.getItem("usuario_id"),
+                    titulo: document.getElementById("eventTitle").value,
+                    descripcion: document.getElementById("eventDescription").value,
+                    ubicacion: document.getElementById("eventLocation").value,
+                    fecha: document.getElementById("eventDate").value,
+                    hora: document.getElementById("eventTime").value,
+                    tags: document.getElementById("eventHashtag").value
+                };
+
+                console.log("Datos enviados al backend:", formData);
+
+                // Enviar los datos al backend usando fetch
+                fetch("http://localhost:8080/Wheelz/api/api_eventos.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("No se pudo crear el evento.");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Evento creado:", data);
+                        loadEvents(); // Cargar eventos para ver el nuevo
+                        closeModal(); // Cerrar el modal y resetear el formulario
+                        document.getElementById("newEventForm").reset();
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("Error al crear el evento. Intenta nuevamente.");
+                    });
+            });
+
+            // Cargar los eventos en `#event-list`
+            function loadEvents() {
+                fetch("http://localhost:8080/Wheelz/api/api_eventos.php")
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error del servidor: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Datos de eventos recibidos:", data); // Para verificar los nombres en consola
+                        const eventList = document.getElementById("event-list");
+                        eventList.innerHTML = "";
+
+                        data.forEach(event => {
+                            const eventCard = document.createElement("div");
+                            eventCard.classList.add("event-card");
+
+                            // Verifica si las propiedades del objeto `event` son correctas
+                            const titulo = event.nombre_evento || event.titulo || "Sin título";
+                            const descripcion = event.descripcion || "Sin descripción";
+                            const fechaHora = event.fecha_hora_evento || event.fecha || "Fecha no disponible";
+                            const ubicacion = event.ubicacion || "Ubicación no disponible";
+                            const autor = event.autor || "Autor desconocido";
+                            const tags = event.tags ? `#${event.tags}` : "";
+
+                            eventCard.innerHTML = `
+                    <h2 class="event-title">${titulo}</h2>
+                    <p class="event-description">${descripcion}</p>
+                    <div class="event-details">
+                        <span class="event-detail">Fecha y Hora: ${fechaHora}</span>
+                        <span class="event-detail">Ubicación: ${ubicacion}</span>
+                        <span class="event-detail">Autor: ${autor}</span>
+                    </div>
+                    ${tags ? `<span class="event-hashtag">${tags}</span>` : ""}
+                    <div id="map-${event.id_evento}" class="event-map" data-location="${ubicacion}"></div>
+                `;
+
+                            eventList.appendChild(eventCard);
+                            initializeMap(`map-${event.id_evento}`, ubicacion);
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Error al cargar los eventos:", error);
+                        const eventList = document.getElementById("event-list");
+                        eventList.innerHTML = "<p>No se pudieron cargar los eventos. Intenta nuevamente más tarde.</p>";
+                    });
+            }
+
+            loadEvents(); // Cargar eventos automáticamente al cargar la página
+
+            window.onclick = function (event) {
+                if (event.target == document.getElementById("newEventModal")) {
+                    closeModal();
+                }
+            };
+        });
+    </script>
+
+</body>
+
+</html>

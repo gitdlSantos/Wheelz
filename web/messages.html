@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes</title>
+    <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <div id="app">
+        <!-- Sidebar para las conversaciones -->
+        <div class="sidebar">
+            <div class="header">
+                <h2>Mensajes</h2>
+                <button id="create-group-btn">Crear Grupo</button>
+            </div>
+            <ul id="conversations-list">
+                <!-- Lista de conversaciones -->
+            </ul>
+        </div>
+
+        <!-- Panel de mensajes -->
+        <div class="message-panel">
+            <div class="message-header">
+                <h3 id="conversation-name">Selecciona una conversación</h3>
+            </div>
+            <div id="messages-container" class="messages">
+                <!-- Mensajes se cargarán aquí -->
+            </div>
+            <div class="message-input">
+                <textarea id="message-input" placeholder="Escribe un mensaje..."></textarea>
+                <button id="send-message-btn">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./assets/js/app.js"></script>
+    <script>
+        fetch('./partials/header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header-placeholder").innerHTML = data;
+            })
+            .catch(error => console.error('Error cargando el header:', error));
+    </script>
+</body>
+
+</html>

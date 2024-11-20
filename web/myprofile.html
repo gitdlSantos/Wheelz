@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario</title>
+    <link rel="stylesheet" href="./assets/css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-pic-wrapper">
+                <div class="profile-pic-header">
+                    <img id="profile-pic" alt="Foto de perfil">
+                </div>
+            </div>
+            <div class="profile-info">
+                <h2 id="username">Nombre de usuario</h2>
+                <p class="profile-bio">Aquí va la biografía del usuario...</p>
+                <p class="profile-stats">
+                    <span class="profile-posts-count">0 publicaciones</span> |
+                    <span class="profile-followers-count">0 seguidores</span> |
+                    <span class="profile-following-count">0 seguidos</span>
+                </p>
+            </div>
+        </div>
+        <div class="profile-actions">
+            <button onclick="openConfigModal()" class="settings-btn">Configuración</button>
+            <button id="logout-btn" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </div>
+    <div class="user-publications">
+        <h3>Todas las Publicaciones</h3>
+        <div class="post-container">
+            <!-- Las publicaciones se cargarán aquí desde JavaScript -->
+        </div>
+    </div>
+
+    <!-- Modal de Configuración -->
+    <div id="configModal" class="modal-config">
+        <div class="modal-config-content">
+            <span class="close-button-config" onclick="closeConfigModal()">&times;</span>
+            <h2 class="modal-config-title">Configuración de Perfil</h2>
+
+            <form id="config-form">
+                <!-- Cambiar correo -->
+                <div class="modal-config-group">
+                    <label for="config-email" class="modal-config-label">Cambiar correo:</label>
+                    <input type="email" id="config-email" class="modal-config-input"
+                        placeholder="Nuevo correo electrónico" autocomplete="username">
+                </div>
+
+                <!-- Cambiar contraseña -->
+                <div class="modal-config-group">
+                    <label for="config-password" class="modal-config-label">Nueva contraseña:</label>
+                    <input type="password" id="config-password" class="modal-config-input"
+                        placeholder="Nueva contraseña" autocomplete="new-password">
+                </div>
+                <div class="modal-config-group">
+                    <label for="config-confirm-password" class="modal-config-label">Confirmar contraseña:</label>
+                    <input type="password" id="config-confirm-password" class="modal-config-input"
+                        placeholder="Confirmar nueva contraseña" autocomplete="new-password">
+                </div>
+
+                <!-- Cambiar nombre de usuario -->
+                <div class="modal-config-group">
+                    <label for="config-username" class="modal-config-label">Cambiar nombre de usuario:</label>
+                    <input type="text" id="config-username" class="modal-config-input"
+                        placeholder="Nuevo nombre de usuario">
+                </div>
+
+                <!-- Cambiar biografía -->
+                <div class="modal-config-group">
+                    <label for="config-bio" class="modal-config-label">Cambiar biografía:</label>
+                    <input type="text" id="config-bio" class="modal-config-input-bio" maxlength="60"
+                        placeholder="Escribe tu biografía (máximo 60 caracteres)">
+                </div>
+
+                <!-- Cambiar foto de perfil -->
+                <div class="modal-config-group">
+                    <label for="config-profile-picture" class="modal-config-label">Cambiar foto de perfil:</label>
+                    <input type="file" id="config-profile-picture" class="modal-config-input-file" accept="image/*">
+                </div>
+
+                <!-- Botón para guardar cambios -->
+                <button type="button" class="modal-config-button" onclick="saveConfigChanges()">Guardar cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="./assets/js/app.js"></script>
+    <script>
+        fetch('./partials/header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header-placeholder").innerHTML = data;
+            })
+            .catch(error => console.error('Error cargando el header:', error));
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const token = localStorage.getItem("access_token");
+            const userId = localStorage.getItem("usuario_id");
+            console.log("Access Token:", token);
+            console.log("User ID:", userId);
+
+            if (!token || !userId) {
+                window.location.href = "http://localhost:8080/Wheelz/web/register.html";
+                return;
+            }
+
+            // Función para obtener datos desde la API
+            async function fetchWithAuth(url) {
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    console.error("Error en la solicitud a la API:", response.statusText);
+                    return null;
+                }
+                return await response.json();
+            }
+
+            // Obtener el conteo de publicaciones
+            const postsData = await fetchWithAuth(`http://localhost:8080/Wheelz/api/api_account.php/count_posts?usuario_id=${userId}`);
+            const totalPosts = postsData ? postsData['Publicaciones total'] || 0 : 0;
+            document.querySelector(".profile-posts-count").textContent = `${totalPosts} publicaciones`;
+
+            // Obtener el conteo de seguidores y seguidos
+            const followersData = await fetchWithAuth(`http://localhost:8080/Wheelz/api/api_account.php/count_followers?usuario_id=${userId}`);
+            const followersCount = followersData ? followersData['followers'] || 0 : 0;
+            const followingCount = followersData ? followersData['following'] || 0 : 0;
+            document.querySelector(".profile-followers-count").textContent = `${followersCount} seguidores`;
+            document.querySelector(".profile-following-count").textContent = `${followingCount} seguidos`;
+
+            // Obtener datos básicos del perfil
+            const profileData = await fetchWithAuth(`http://localhost:8080/Wheelz/api/api_account.php/user_profile?usuario_id=${userId}`);
+            if (profileData && profileData.user) {
+                const { nombre_usuario, avatar, biografia } = profileData.user;
+                document.getElementById("username").textContent = "@" + (nombre_usuario || "Usuario");
+                document.getElementById("profile-pic").src = avatar && avatar.startsWith("http")
+                    ? avatar
+                    : `http://localhost:8080/Wheelz/uploads/${avatar || 'default-image.png'}`;
+                document.querySelector(".profile-bio").textContent = biografia || "Aquí va la biografía del usuario...";
+            } else {
+                console.error("No se pudo cargar la información del perfil.");
+            }
+
+            // Obtener todas las publicaciones del usuario
+            const publicacionesData = await fetchWithAuth(`http://localhost:8080/Wheelz/api/api_account.php/all_posts?usuario_id=${userId}`);
+            const publicaciones = publicacionesData ? publicacionesData['publicaciones'] || [] : [];
+            const postContainer = document.querySelector(".post-container");
+
+            if (publicaciones.length === 0) {
+                postContainer.innerHTML = "<p>No hay publicaciones disponibles.</p>";
+            } else {
+                publicaciones.forEach(pub => {
+                    let contentElement;
+
+                    switch (pub.type) {
+                        case "post":
+                            contentElement = createPostElement(pub);
+                            break;
+                        case "event":
+                            contentElement = createEventElement(pub); // Se llama a la función corregida
+                            break;
+                        case "forum":
+                            contentElement = createForumElement(pub);
+                            break;
+                        default:
+                            console.warn("Tipo desconocido:", pub.type);
+                            return;
+                    }
+
+                    postContainer.appendChild(contentElement);
+                });
+            }
+            // Función para crear elementos de posts
+            function createPostElement(post) {
+                const postElement = document.createElement("div");
+                postElement.classList.add("publication-container");
+
+                const postAuthor = post.nombre_usuario || "Usuario";
+                const postAvatar = post.avatar || "/Wheelz/uploads/default-image.png";
+                const postImage = post.imagen
+                    ? `<div class="media-content"><img src="${post.imagen}" alt="Imagen del post" onerror="this.style.display='none';"/></div>`
+                    : "";
+
+                postElement.innerHTML = `
+                        <div class="post">
+                            <div class="post-header">
+                                <div class="profile-pic">
+                                    <img src="${postAvatar}" alt="Foto de perfil" class="profile-image">
+                                </div>
+                                <h3 class="nombre_usuario">${postAuthor}</h3>
+                                <button class="report-btn abrir-reporte">
+                                    <img src="https://www.svgrepo.com/show/479045/exclamation-mark.svg" alt="Reportar">
+                                </button>
+                            </div>
+                            ${postImage}
+                            <div class="post-content">
+                                <p>${post.contenido || ""}</p>
+                                <span class="date">Fecha de Creación: ${post.created_at}</span>
+                            </div>
+                            <div class="post-footer">
+                                <button class="like-btn">
+                                    <img src="https://www.svgrepo.com/show/473234/heart.svg" alt="Me gusta" class="heart-icon">
+                                </button>
+                                <button class="comment-btn">
+                                    <img src="https://www.svgrepo.com/show/473144/comment-right.svg" alt="Comentarios">
+                                </button>
+                                <button>
+                                    <img src="https://www.svgrepo.com/show/379628/share.svg" alt="Compartir">
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                // Lógica de interacción para el botón de "Me gusta"
+                const likeButton = postElement.querySelector('.like-btn');
+                const heartIcon = likeButton.querySelector('.heart-icon');
+
+                likeButton.addEventListener('click', function () {
+                    likeButton.classList.toggle('liked');
+                    heartIcon.src = likeButton.classList.contains('liked')
+                        ? 'https://www.svgrepo.com/show/473235/heart-filled.svg'
+                        : 'https://www.svgrepo.com/show/473234/heart.svg';
+                });
+                return postElement;
+            }
+
+            // Función para crear elementos de eventos
+            function createEventElement(event) {
+                const eventElement = document.createElement("div");
+                eventElement.classList.add("event-card");
+
+                // Mapeo de propiedades
+                const titulo = event.nombre_evento || "Sin título";
+                const descripcion = event.contenido || "Sin descripción"; // Esto mapea correctamente la descripción
+                const fechaHora = event.fecha_hora || "Fecha no disponible"; // Aquí se accede correctamente a la propiedad
+                const ubicacion = event.ubicacion || "Ubicación no disponible";
+                const autor = event.nombre_usuario || "Autor desconocido";
+                const tags = ""; // Ajustar si tienes etiquetas disponibles
+
+                eventElement.innerHTML = `
+                    <h2 class="event-title">${titulo}</h2>
+                    <p class="event-description">${descripcion}</p>
+                    <div class="event-details">
+                        <span class="event-detail">Fecha y Hora: ${fechaHora}</span>
+                        <span class="event-detail">Ubicación: ${ubicacion}</span>
+                        <span class="event-detail">Autor: ${autor}</span>
+                    </div>
+                    ${tags ? `<span class="event-hashtag">${tags}</span>` : ""}
+                    <div id="map-${event.id}" class="event-map" data-location="${ubicacion}"></div>
+                `;
+
+                // Inicializar mapa si hay ubicación
+                if (ubicacion) {
+                    initializeMap(`map-${event.id}`, ubicacion);
+                }
+                return eventElement;
+            }
+
+
+            // Función para crear elementos de foros
+            function createForumElement(forum) {
+                const forumElement = document.createElement("div");
+                forumElement.classList.add("forum-post");
+
+                const titulo = forum.titulo || "Sin título";
+                const contenido = forum.contenido || "Sin contenido";
+                const autor = forum.nombre_usuario || "Desconocido";
+                const createdAt = forum.created_at || "Fecha no disponible";
+                const hashtags = forum.hashtag
+                    ? forum.hashtag.split(',').map(tag => `<span class="tag">#${tag.trim()}</span>`).join(' ')
+                    : "";
+
+                forumElement.innerHTML = `
+                    <div class="post-header-foro">
+                        <div>
+                            <h2 class="post-title">${titulo}</h2>
+                            <p class="post-meta">Publicado por ${autor} el ${createdAt}</p>
+                        </div>
+                        <button class="report-btn">!</button>
+                    </div>
+                    <div class="post-content">
+                        <p>${contenido}</p>
+                    </div>
+                    <div class="post-tags">
+                        ${hashtags}
+                    </div>
+                    <div class="post-actions">
+                        <div>
+                            <button class="like-btn">
+                                <img src="https://www.svgrepo.com/show/473234/heart.svg" alt="Me gusta" class="heart-icon">
+                            </button>
+                            <button class="comment-btn" onclick="toggleForumComments(${forum.id})">
+                                <img src="https://www.svgrepo.com/show/473144/comment-right.svg" alt="Comentarios">
+                            </button>
+                        </div>
+                        <button>
+                            <img src="https://www.svgrepo.com/show/379628/share.svg" alt="Compartir">
+                        </button>
+                    </div>
+                    <div class="comments-container hidden" id="comments-${forum.id}">
+                        <div class="new-comment">
+                            <input type="text" id="newComment-${forum.id}" placeholder="Escribe un comentario...">
+                            <button onclick="addForumComment(${forum.id})">Comentar</button>
+                        </div>
+                    </div>
+                `;
+
+                return forumElement;
+            }
+
+
+
+            // Función para inicializar mapas (para eventos)
+            function initializeMap(containerId, location) {
+                fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=1ebe402d9bd04b219a659b39ea8a8ba1`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.results.length > 0) {
+                            const { lat, lng } = data.results[0].geometry;
+                            const map = L.map(containerId).setView([lat, lng], 13);
+
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            }).addTo(map);
+
+                            L.marker([lat, lng]).addTo(map).bindPopup(location).openPopup();
+                        }
+                    })
+                    .catch(err => console.error("Error al cargar el mapa:", err));
+            }
+
+
+        });
+        // Función de logout
+        function logout() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('usuario_id');
+            window.location.href = "http://localhost:8080/Wheelz/web/register.html";
+        }
+
+        function openConfigModal() {
+            document.getElementById("configModal").style.display = "block";
+        }
+
+        function closeConfigModal() {
+            document.getElementById("configModal").style.display = "none";
+        }
+
+        async function saveConfigChanges() {
+            const formData = new FormData();
+            const access_token = localStorage.getItem("access_token");
+
+            // Elementos de reporte modal, declarados en el ámbito global del script
+            const contenedorVentana = document.getElementById('contenedor-ventana');
+            const cancelarReporteButton = document.getElementById('cancelar-reporte');
+
+            formData.append("nombre_usuario", document.getElementById("config-username").value);
+            formData.append("email", document.getElementById("config-email").value);
+            formData.append("bio", document.getElementById("config-bio").value);
+
+            const password = document.getElementById("config-password").value;
+            const confirmPassword = document.getElementById("config-confirm-password").value;
+            if (password && password === confirmPassword) {
+                formData.append("password", password);
+            }
+
+            const profilePicture = document.getElementById("config-profile-picture").files[0];
+            if (profilePicture) {
+                formData.append("avatar", profilePicture);
+            }
+
+            try {
+                const response = await fetch("http://localhost:8080/Wheelz/api/api_users.php/update_profile", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${access_token}`
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.status === "success") {
+                    alert(result.message); // Mostrar mensaje de éxito
+                    window.location.reload(); // Recargar la página para ver los cambios
+                } else if (response.status === 409) {
+                    alert(result.message); // Mostrar el mensaje de error si hay conflicto de usuario o correo
+                } else {
+                    alert(result.message || "Error al actualizar el perfil");
+                }
+            } catch (error) {
+                console.error("Error al actualizar el perfil:", error);
+                alert("Error al conectar con el servidor.");
+            }
+        }
+    </script>
+</body>
+
+</html>

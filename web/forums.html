@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheelz - Foros</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <main class="forums-container">
+        <div class="forums-header">
+            <h1>Foros</h1>
+        </div>
+        <button class="new-post-btn" onclick="openModal()">Nueva Publicación</button>
+
+        <!-- Nuevo contenedor para los foros cargados dinámicamente -->
+        <div id="forum-list"></div>
+    </main>
+
+    <div id="newPostModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Crear Nueva Publicación</h2>
+            <form id="newPostForm">
+                <div class="form-group">
+                    <label for="postTitle">Título</label>
+                    <input type="text" id="postTitle" name="titulo" placeholder="Ingresa el título del foro" required>
+                </div>
+                <div class="form-group">
+                    <label for="postContent">Contenido</label>
+                    <textarea id="postContent" name="contenido" placeholder="Escribe el contenido aquí..."
+                        required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="postCategory">Categoría</label>
+                    <input type="text" id="postCategory" name="categoria" placeholder="Categoría del foro" required>
+                </div>
+                <div class="form-group">
+                    <label for="postHashtags">Hashtags (separados por comas)</label>
+                    <input type="text" id="postHashtags" name="hashtag"
+                        placeholder="Ejemplo: #programación, #tecnología">
+                </div>
+                <button type="submit" class="submit-btn">Crear Publicación</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        fetch('./partials/header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header-placeholder").innerHTML = data;
+            })
+            .catch(error => console.error('Error cargando el header:', error));
+    </script>
+
+    <script src="./assets/js/app.js"></script>
+
+    <script>
+        function openModal() {
+            document.getElementById("newPostModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("newPostModal").style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById("newPostModal");
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
+
+</body>
+
+</html>

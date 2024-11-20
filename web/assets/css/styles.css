@@ -1,0 +1,2314 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Open Sans', sans-serif;
+}
+
+#map {
+    height: 500px;
+    width: 100%;
+}
+
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/*////////////////////////////////////////////// HEADER /////////////////////////////////////////////////////*/
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 10px 20px;
+    max-width: 100vw;
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajustes en las secciones del header */
+section {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.barra-busqueda {
+    display: flex;
+    align-items: center;
+    margin-right: 75px;
+}
+
+.sec-iconos {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Logo del sitio */
+.logo img {
+    width: 60px;
+    height: auto;
+    margin-right: 40px;
+    /* Espacio entre logo y barra de búsqueda */
+}
+
+/* Contenedor de la búsqueda */
+.search-container {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-start;
+}
+
+/* Estilo del campo de búsqueda */
+.search-container input[type="text"] {
+    padding: 10px;
+    width: 300px;
+    border: 1.5px solid #f69a3d;
+    border-radius: 100px;
+    transition: all 0.3s ease;
+}
+
+.search-container input[type="text"]:focus {
+    border-color: #f69a3d;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(246, 154, 61, 0.5);
+    outline: none;
+}
+
+/* Iconos de navegación */
+.iconos {
+    display: flex;
+    gap: 50px;
+    /* Aumentar el espacio entre los íconos */
+    align-items: center;
+    position: relative;
+}
+
+/* Le da colorsito a los iconos cuando pasa por arriba el cursor */
+a button::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    background-color: #f69a3d;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+a:hover button::after {
+    width: 100%;
+}
+
+nav button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+nav img {
+    width: 32px;
+    height: 32px;
+}
+
+/* Barra debajo del ícono */
+nav button img {
+    transition: transform 0.3s ease;
+    /* Transición suave para la animación */
+}
+
+/* Animación al pasar el cursor */
+nav button:hover img {
+    transform: scale(1.1);
+    /* Escala el ícono al 120% de su tamaño original */
+}
+
+nav button img {
+    transition: transform 0.3s ease;
+    /* Transición suave para la animación */
+}
+
+/* Animación al pasar el cursor */
+nav button:hover img {
+    transform: scale(1.1);
+    /* Escala el ícono al 120% de su tamaño original */
+}
+
+
+
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/*///////////////////////////////////////////// MAIN PAGE ///////////////////////////////////////////////////*/
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.new-post-section .form-group {
+    margin-bottom: 15px;
+}
+
+.editable {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-height: 100px;
+    padding: 10px;
+    font-size: 14px;
+    outline: none;
+}
+
+.editable:empty:before {
+    content: attr(placeholder);
+    color: #888;
+}
+
+
+
+/* Animación de Velocidad al Hacer Clic */
+.editable:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px #007bff, inset 0 0 15px #007bff;
+    animation: speed-border 0.7s ease forwards;
+}
+
+@keyframes speed-border {
+    0% {
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.2), inset 0 0 5px rgba(0, 123, 255, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 12px rgba(0, 123, 255, 0.4), inset 0 0 12px rgba(0, 123, 255, 0.4);
+    }
+
+    100% {
+        box-shadow: 0 0 8px #007bff, inset 0 0 15px #007bff;
+    }
+}
+
+/* Input de Imágenes */
+.file-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.image-upload-label {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #ffffff;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.image-upload-label:hover {
+    background-color: #e4e6e9;
+}
+
+#postImages {
+    display: none;
+}
+
+.file-input input[type="file"] {
+    display: none;
+}
+
+.new-post-section input[type="text"],
+.new-post-section textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.new-post-section input[type="file"] {
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.new-post-section .submit-btn {
+    background-color: #1DA1F2;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+}
+
+.new-post-section .submit-btn:hover {
+    background-color: #1a91da;
+}
+
+.file-input label {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #64b5f6;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.file-input input[type="file"] {
+    display: none;
+}
+
+.post-submit-btn {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.post-submit-btn:hover {
+    background-color: #45a049;
+}
+
+/* Efecto de Pulsación para el Botón de Publicar */
+.post-submit-btn:active {
+    background-color: #1e7e34;
+    transform: scale(0.98);
+}
+
+
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/*//////////////////////////////////////// VENTANA DE REPORTE ///////////////////////////////////////////////*/
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+.contenedor-ventana {
+    display: flex;
+    background-color: #7e787846;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    pointer-events: none;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: scale(0.9);
+}
+
+.mostrar_report {
+    pointer-events: auto;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.ventana-reporte {
+    background-color: #fff;
+    width: 400px;
+    max-width: 100%;
+    padding: 30px 50px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.ventana-reporte p {
+    border-bottom: solid 1px;
+    border-color: #c4c0c0;
+}
+
+
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/*/////////////////////////////////////////// PUBLICACION ///////////////////////////////////////////////////*/
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+/* Estilo general para centrar las publicaciones */
+.publication-container {
+    min-width: 500px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Post */
+
+.post-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* Espacio entre posts */
+    margin: 0 auto;
+}
+
+.post {
+    width: 500px;
+    max-width: 500px;
+    margin: 0 auto 20px auto;
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Ajustes para publicaciones sin imagen */
+.post.no-image {
+    padding-bottom: 10px;
+    /* Ajusta el espacio inferior para acercar la fecha */
+}
+
+/* Ajustes cuando hay imagen */
+.post .media-content img {
+    width: 450px;
+    max-width: 450px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+/* Ajustes para publicaciones sin imagen */
+
+
+
+/* Header de publicacion */
+.post-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile-pic img,
+.report-btn {
+    display: block;
+}
+
+.post-header h3 {
+    margin-left: 10px;
+    text-align: center;
+}
+
+/* Estilos adicionales para el texto */
+.nombre_usuario {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.post-content p {
+    margin: 0;
+    font-size: 0.95em;
+    color: #333;
+}
+
+.report-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.report-btn img:hover {
+    opacity: 0.7;
+}
+
+button.report-btn {
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.profile-pic {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Comentarios */
+.comments-section {
+    display: none;
+    flex: 1;
+    max-width: 500px;
+    margin-left: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+.comment-author {
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
+}
+
+/* Fecha del comentario */
+.comment-date {
+    font-size: 0.85em;
+    color: #888;
+}
+
+/* Contenido del texto del comentario */
+.comment-text {
+    font-size: 1em;
+    color: #555;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.reply {
+    margin-left: 20px;
+    border-left: 2px solid #ddd;
+    padding-left: 10px;
+}
+
+
+
+.new-comment-form {
+    margin-top: 15px;
+}
+
+.new-comment-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    box-sizing: border-box;
+    /* Incluye padding y borde en el ancho */
+}
+
+.new-comment-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+.new-comment-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.new-comment-actions button {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.new-comment-actions input[type="file"] {
+    display: flex;
+}
+
+.new-comment-actions label {
+    background-color: #e5e7eb;
+    color: #4b5563;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Footer de publicacion */
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+}
+
+/* Ajuste del contenedor de contenido */
+.post-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 10px;
+    margin-bottom: auto;
+    /* Permite que el espacio inferior sea dinámico */
+}
+
+.date {
+    display: block;
+    font-size: 0.85em;
+    color: #999;
+    margin-top: 10px;
+    align-self: flex-start;
+    /* Alinea la fecha en la parte inferior del contenido */
+}
+
+/* Ajuste del texto de la fecha */
+.post-content .date {
+    max-width: 100%;
+    /* Asegura que la imagen no sobresalga */
+    height: auto;
+    border-radius: 8px;
+    margin-top: auto;
+    /* Empuja la fecha hacia el fondo del post */
+    font-size: 0.85em;
+    color: #888;
+    text-align: left;
+    padding-top: 10px;
+}
+
+/* Interacciones publicacion footer */
+.post-footer button img {
+    width: 25px;
+    height: 25px;
+}
+
+.post-footer button img:hover {
+    opacity: 0.6;
+}
+
+.media-content {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.media-content img {
+    width: 100%;
+    height: 300px;
+    /* Ajuste de altura fija */
+    object-fit: cover;
+    border-radius: 8px
+}
+
+.heart-icon {
+    width: 25px;
+    height: 25px;
+    transition: transform 0.3s ease;
+}
+
+.liked .heart-icon {
+    transform: scale(1.2);
+}
+
+@keyframes changeColor {
+    0% {
+        filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+    }
+
+    100% {
+        filter: invert(39%) sepia(100%) saturate(1000%) hue-rotate(359deg) brightness(104%) contrast(102%);
+    }
+}
+
+.liked .heart-icon {
+    animation: changeColor 0.3s forwards;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/*/////////////////////////////////////////// RESPONSIVE ////////////////////////////////////////////////////*/
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+
+@media (max-width: 768px) {
+    .logo img {
+        width: 40px;
+        /* Reduce el tamaño del logo en pantallas pequeñas */
+    }
+
+    .search-container input[type="text"] {
+        width: 100%;
+        /* Hace que la barra de búsqueda ocupe todo el ancho disponible */
+    }
+
+    .iconos {
+        gap: 15px;
+        /* Reduce el espacio entre los iconos en pantallas pequeñas */
+    }
+
+    .post {
+        width: 90%;
+        /* Hace que las publicaciones ocupen el 90% del ancho en pantallas pequeñas */
+    }
+
+    .media-content img {
+        min-width: 100%;
+        /* Asegura que las imágenes se ajusten al ancho de la pantalla */
+    }
+
+    .profile-pic {
+        width: 25px;
+        /* Reduce el tamaño de la imagen de perfil en pantallas pequeñas */
+        height: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        flex-direction: column;
+        /* Cambia la dirección del flex para apilar elementos en pantallas muy pequeñas */
+        align-items: flex-start;
+        /* Alinea los elementos al inicio */
+    }
+
+    .search-container {
+        margin-left: 0;
+        /* Elimina el margen izquierdo en pantallas pequeñas */
+        margin-top: 10px;
+        /* Añade un margen superior */
+    }
+
+    .iconos {
+        flex-direction: row;
+        /* Asegura que los iconos se alineen en fila */
+        justify-content: space-between;
+        /* Espacia los iconos uniformemente */
+        width: 100%;
+        /* Hace que los iconos ocupen todo el ancho */
+    }
+
+    nav img {
+        width: 24px;
+        /* Reduce el tamaño de los íconos en pantallas pequeñas */
+        height: 24px;
+    }
+}
+
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ===============================================LOGIN / REGISTER=============================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+
+/* Estilos específicos para la página de login/register */
+.login-register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url(../images/backgruoundlogos.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.login-register-box {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 24rem;
+}
+
+.login-register-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.login-register-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #4b5563;
+}
+
+.login-register-tabs {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.login-register-tab {
+    flex: 1;
+    padding: 0.75rem;
+    text-align: center;
+    background-color: #e5e7eb;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    color: #4b5563;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.login-register-tab:first-child {
+    border-top-left-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
+}
+
+.login-register-tab:last-child {
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+}
+
+.login-register-tab.active {
+    background-color: #eb8525;
+    color: white;
+}
+
+.login-register-content {
+    display: none;
+}
+
+.login-register-content.active {
+    display: block;
+}
+
+.login-register-form-group {
+    margin-bottom: 1rem;
+}
+
+.login-register-form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #4b5563;
+}
+
+.login-register-form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
+
+.login-register-form-group input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.login-register-submit-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #eb8525;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.login-register-submit-btn:hover {
+    background-color: #d36906;
+}
+
+.login-register-submit-btn:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+#profile-picture {
+    display: none;
+}
+
+.profile-picture-label {
+    display: inline-block !important;
+    padding: 10px;
+    background-color: #64b5f6;
+    color: rgb(76, 64, 64) !important;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto cuando se selecciona una imagen */
+.profile-picture-label.selected {
+    background-color: #4ae25e;
+    transform: scale(1.05);
+    /* Aumenta ligeramente el tamaño */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    /* Sombra más pronunciada */
+}
+
+.profile-picture-label:hover {
+    background-color: #42a5f5;
+    transform: scale(1.02);
+    /* Pequeña escala al pasar el mouse */
+}
+
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================FOROS DE CONTENIDO================================================ */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+
+/* Foro Post */
+.forum-post {
+    width: 100%;
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Header del foro */
+.post-header-foro {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.post-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0;
+}
+
+.post-meta {
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Contenido del foro */
+.post-content {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Tags */
+.post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.tag {
+    background-color: #e5e7eb;
+    color: #4b5563;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9em;
+}
+
+/* Acciones del foro */
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.post-actions button img {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.post-actions button img:hover {
+    opacity: 0.7;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.forums-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.forums-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+.post-header-foro {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 10px;
+}
+
+.post-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0;
+}
+
+.post-meta {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.tag {
+    background-color: #e5e7eb;
+    color: #4b5563;
+    padding: 3px 8px;
+    border-radius: 15px;
+    font-size: 0.8em;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.post-actions button img {
+    width: 25px;
+    height: 25px;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-group textarea {
+    height: 100px;
+}
+
+.submit-btn {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    background-color: #2563eb;
+}
+
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* =============================================EVENTOS SOCIALES================================================= */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+
+/* Botón de Nueva Publicación/Eventos */
+.new-post-btn,
+.new-event-btn {
+    display: inline-block;
+    margin: 1.5rem auto;
+    padding: 0.9rem 2rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #007BFF, #0056b3);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.new-post-btn:hover,
+.new-event-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+}
+
+.modal-content h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.submit-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* ============================================ */
+
+.event-card {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    /* Separación entre eventos */
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+
+.events-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.events-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+.event-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 10px;
+}
+
+.event-description {
+    margin-bottom: 15px;
+    color: #374151;
+    font-size: 1em;
+}
+
+.event-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.event-detail {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em;
+    color: #4b5563;
+}
+
+.event-detail svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+}
+
+.event-hashtag {
+    background-color: #e5e7eb;
+    color: #4b5563;
+    padding: 3px 8px;
+    border-radius: 15px;
+    font-size: 0.85em;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.event-map {
+    width: 90%; /* Ajusta según el diseño deseado */
+    height: 300px;
+    margin: auto; /* Centra el mapa */
+    margin-top: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal {
+    display: none;
+    /* Oculto por defecto */
+    position: fixed;
+    /* Para cubrir toda la pantalla */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Fondo oscuro */
+    z-index: 1000;
+    overflow-y: auto;
+    /* Permite el desplazamiento en el modal */
+}
+
+.modal-content {
+    position: relative;
+    background-color: white;
+    margin: 5% auto;
+    /* Añade algo de espacio desde la parte superior */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    /* Ajusta el ancho del modal para que sea un poco más pequeño que la pantalla */
+    max-width: 500px;
+    max-height: 80vh;
+    /* Limita la altura máxima al 80% de la altura de la pantalla */
+    overflow-y: auto;
+    /* Permite desplazarse dentro del contenido del modal si es muy largo */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-group textarea {
+    height: 100px;
+}
+
+.submit-btn {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    background-color: #2563eb;
+}
+
+
+
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ===============================================PROPIO PERFIL================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+
+/* Estilos adicionales para la pÃ¡gina de perfil */
+/* Estilos adicionales para la página de perfil */
+.profile-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-pic-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 130px;
+    height: 130px;
+    margin-right: 20px;
+}
+
+.profile-pic-header img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.profile-pic-header img:hover {
+    transform: scale(1.05);
+    /* Efecto de agrandamiento al pasar el ratón */
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-username {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.profile-bio {
+    color: #666;
+    font-size: 1rem;
+    margin: 5px 0 10px;
+}
+
+.profile-stats {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.profile-stats span {
+    margin: 0 10px;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.settings-btn,
+#logout-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.settings-btn {
+    background-color: #666;
+    color: #fff;
+}
+
+.settings-btn:hover {
+    background-color: #555;
+}
+
+#logout-btn {
+    background-color: #e53935;
+    color: #fff;
+}
+
+#logout-btn:hover {
+    background-color: #d32f2f;
+}
+
+.modal-config {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow-y: auto;
+    /* Agrega scroll si el contenido es demasiado alto */
+}
+
+.modal-config-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1001;
+}
+
+.close-button-config {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.modal-config-title {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+.modal-config-group {
+    margin-bottom: 15px;
+}
+
+.modal-config-label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.modal-config-input,
+.modal-config-textarea,
+.modal-config-input-file,
+.modal-config-input-bio {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.modal-config-button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.modal-config-button:hover {
+    background-color: #45a049;
+}
+
+/* Estilos del modal */
+#profileModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#profileModal.show {
+    display: block;
+}
+
+#modalContent {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+}
+
+#closeBtn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+/* Estilos de los elementos del perfil dentro del modal */
+#profileAvatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-top: 20px;
+}
+
+#profileUsername {
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+#profileBio {
+    color: #666;
+}
+
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* =================================================MENSAJES===================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+
+/* Contenedor principal */
+#app {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden; /* Previene scroll indeseado */
+}
+
+/* Sidebar */
+.sidebar {
+    width: 25%;
+    background-color: #ffffff; /* Fondo blanco */
+    border-right: 1px solid #dee2e6; /* Borde gris claro */
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ocupa toda la altura */
+    overflow: hidden;
+}
+
+.sidebar .header {
+    padding: 15px;
+    background-color: #60a5fa; /* Azul primario */
+    color: #ffffff; /* Texto blanco */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar .header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+#create-group-btn {
+    background-color: #fb923c; /* Naranja */
+    color: #ffffff; /* Texto blanco */
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#create-group-btn:hover {
+    background-color: #f97316; /* Naranja más oscuro */
+}
+
+#conversations-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto; /* Permite scroll si hay muchas conversaciones */
+    flex-grow: 1; /* Toma el espacio restante del sidebar */
+}
+
+#conversations-list li {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #dee2e6; /* Borde gris claro */
+    background-color: #ffffff; /* Fondo blanco */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#conversations-list li:hover {
+    background-color: #f8f9fa; /* Fondo más claro al pasar el mouse */
+}
+
+#conversations-list li .avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #adb5bd; /* Gris medio */
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.avatar img {
+    width: 40px; /* Tamaño del ancho de la imagen */
+    height: 40px; /* Tamaño del alto de la imagen */
+    border-radius: 50%; /* Hace que la imagen sea redonda */
+    object-fit: cover; /* Ajusta la imagen dentro del contenedor sin distorsión */
+}
+
+
+/* Panel de mensajes */
+.message-panel {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Toma el espacio restante en el contenedor padre */
+    background-color: #ffffff; /* Fondo blanco */
+    overflow: hidden; /* Evita que los elementos desborden */
+}
+
+.message-header {
+    padding: 15px;
+    background-color: #60a5fa; /* Azul primario */
+    color: #ffffff; /* Texto blanco */
+    border-bottom: 1px solid #dee2e6; /* Borde gris claro */
+}
+
+.message-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.messages {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto; /* Permite scroll dentro del panel de mensajes */
+    background-color: #f8f9fa; /* Fondo gris claro */
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    max-width: 70%;
+    word-wrap: break-word;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.message.sent {
+    background-color: #60a5fa; /* Azul primario */
+    color: #ffffff; /* Texto blanco */
+    align-self: flex-end;
+}
+
+.message.received {
+    background-color: #e9ecef; /* Gris claro */
+    align-self: flex-start;
+}
+
+/* Campo de entrada */
+.message-input {
+    display: flex;
+    padding: 15px;
+    background-color: #ffffff; /* Fondo blanco */
+    border-top: 1px solid #dee2e6;
+    align-items: center;
+}
+
+#message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    font-size: 14px;
+    resize: none;
+    height: 40px;
+}
+
+#send-message-btn {
+    background-color: #60a5fa; /* Azul primario */
+    color: #ffffff; /* Texto blanco */
+    border: none;
+    padding: 10px 15px;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 14px;
+}
+
+#send-message-btn:hover {
+    background-color: #3b82f6; /* Azul más oscuro */
+}
+
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ===========================================BARRA DE BUSQUEDA===================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+
+
+/* Resultados de búsqueda */
+.search-results {
+    position: absolute;
+    top: 64px;
+    width: 20%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+    padding: 5px 0;
+    /* Separación interna entre los elementos */
+}
+
+/* Elemento individual del resultado */
+.search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    /* Más ajustado para evitar estiramiento */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-result-item:hover {
+    background-color: #f7f7f7;
+}
+
+/* Estilo del avatar */
+.search-result-item img.search-avatar {
+    width: 40px;
+    /* Tamaño un poco más grande para mejor visibilidad */
+    height: 40px;
+    border-radius: 50%;
+    background-color: #000;
+    /* Fondo negro si no carga la imagen */
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+/* Nombre de usuario */
+.search-result-item .search-username {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    line-height: 1.2;
+    /* Alineación visual más precisa */
+    white-space: nowrap;
+    /* Evitar que el texto se desborde */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Puntos suspensivos si el texto es demasiado largo */
+}
+
+
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ===========================================NOTIFICACIONES===================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+
+.notifications-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9fafb;
+}
+
+.notification {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: white;
+    transition: background-color 0.3s;
+}
+
+.notification:hover {
+    background-color: #f3f4f6;
+}
+
+.notification-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+}
+
+.notification-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.notification-content {
+    flex-grow: 1;
+}
+
+.notification-text {
+    margin-bottom: 5px;
+}
+
+.notification-username {
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.notification-action {
+    color: #4b5563;
+}
+
+.notification-post {
+    font-style: italic;
+    color: #6b7280;
+}
+
+.notification-time {
+    font-size: 0.8em;
+    color: #9ca3af;
+}
+
+.follow-btn {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
+}
+
+.follow-btn:hover {
+    background-color: #2563eb;
+}
+
+.follow-btn.following {
+    background-color: #e5e7eb;
+    color: #4b5563;
+}
+
+.follow-btn.following:hover {
+    background-color: #d1d5db;
+}
+
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ==============================================VISTA PREVIA==================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+
+.preview-post-section .post-content {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    max-width: 100%;
+    /* Se ajusta al tamaño del contenedor */
+}
+
+.new-post-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    /* Espacio entre el editor y la vista previa */
+    align-items: flex-start;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.new-post-section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#newPostForm {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+.preview-post-section {
+    flex: 1;
+    max-width: 400px;
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: none;
+    /* Ocultar por defecto */
+}
+
+#preview-post {
+    max-width: 500px;
+    margin: auto;
+}
+
+/* Estilos para la imagen en pantalla completa */
+.image-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.fullscreen-image-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Fondo oscuro */
+    z-index: 1000;
+    overflow: auto;
+}
+
+.fullscreen-image {
+    max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    color: white;
+    font-size: 24px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ===============================================BACKOFFICE===================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+/* ============================================================================================================== */
+
+.admin-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.admin-dashboard {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.admin-section {
+    flex: 1;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.admin-section h2 {
+    margin-top: 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.admin-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.admin-button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.admin-button:hover {
+    background-color: #2563eb;
+}
+
+.admin-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.admin-list-item {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+@media (max-width: 768px) {
+    .admin-dashboard {
+        flex-direction: column;
+    }
+
+    .admin-section {
+        margin-bottom: 20px;
+    }
+}
+
+/* Existing global styles remain unchanged */
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+
+    .admin-container,
+    .forums-container,
+    .events-container,
+    .profile-container {
+        max-width: 95%;
+    }
+}
+
+@media (max-width: 992px) {
+    .new-post-container {
+        flex-direction: column;
+    }
+
+    .new-post-section,
+    .preview-post-section {
+        max-width: 100%;
+    }
+
+    .admin-dashboard {
+        flex-direction: column;
+    }
+
+    .admin-section {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .logo img {
+        width: 40px;
+        margin-right: 20px;
+    }
+
+    .search-container {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .search-container input[type="text"] {
+        width: 100%;
+    }
+
+    .iconos {
+        gap: 20px;
+    }
+
+    .post,
+    .event {
+        width: 100%;
+    }
+
+    .messages-container {
+        flex-direction: column;
+    }
+
+    .conversations-list {
+        width: 100%;
+        height: 30%;
+    }
+
+    .chat-area {
+        height: 70%;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-pic-wrapper {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .profile-actions {
+        flex-direction: column;
+    }
+
+    .settings-btn,
+    #logout-btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+
+    .post-header,
+    .post-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .post-footer button {
+        margin-top: 10px;
+    }
+
+    .event-details {
+        flex-direction: column;
+    }
+
+    .chat-input {
+        flex-direction: column;
+    }
+
+    .chat-input input,
+    .chat-input button {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .notification {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .notification-avatar {
+        margin-bottom: 10px;
+    }
+
+    .login-register-box {
+        padding: 1rem;
+    }
+}
+
+.post-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    /* Ajusta la imagen para que no se deforme */
+    border-radius: 8px;
+    /* Opcional: Bordes redondeados */
+    margin: 10px 0;
+}
+
+/* Add this at the end of your CSS file */
+@media (max-width: 480px) {
+    .iconos {
+        gap: 15px;
+    }
+
+    nav img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .post-content,
+    .event-description {
+        font-size: 0.9em;
+    }
+
+    .login-register-tab {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .profile-username {
+        font-size: 1.2rem;
+    }
+
+    .profile-bio {
+        font-size: 0.9rem;
+    }
+
+    .profile-stats {
+        font-size: 0.8rem;
+    }
+}
+
+/* Existing specific component styles remain unchanged */

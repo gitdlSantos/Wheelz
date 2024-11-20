@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoMotoSocial - Notificaciones</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main>
+        <h1>Notificaciones</h1>
+
+        <!-- Contenedor para todas las notificaciones (leídas) -->
+        <div id="read-notifications" class="notifications-container">
+            <!-- Las notificaciones se cargarán aquí -->
+        </div>        
+    </main>
+
+    <script>
+        document.getElementById("header-placeholder").innerHTML = fetch('partials/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById("header-placeholder").innerHTML = data);
+
+        // Simulación de la funcionalidad del botón "Seguir"
+        document.querySelectorAll('.follow-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                this.classList.toggle('following');
+                this.textContent = this.classList.contains('following') ? 'Siguiendo' : 'Seguir';
+            });
+        });
+    </script>
+    <script src="./assets/js/app.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario</title>
+    <link rel="stylesheet" href="./assets/css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+</head>
+
+<body>
+    <!-- Header -->
+    <div id="header-placeholder"></div>
+
+    <!-- Contenedor del perfil -->
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-pic-wrapper">
+                <div class="profile-pic-header">
+                    <img id="profile-pic" alt="Foto de perfil">
+                </div>
+            </div>
+            <div class="profile-info">
+                <h2 id="username">Nombre de usuario</h2>
+                <p class="profile-bio">Aquí va la biografía del usuario...</p>
+                <p class="profile-stats">
+                    <span class="profile-posts-count">0 publicaciones</span> |
+                    <span class="profile-followers-count">0 seguidores</span> |
+                    <span class="profile-following-count">0 seguidos</span>
+                </p>
+            </div>
+        </div>
+        <div class="profile-actions">
+            <button id="follow-btn" class="follow-btn">Seguir</button>
+        </div>
+    </div>
+
+    <!-- Publicaciones del usuario -->
+    <div class="user-publications">
+        <h3>Todas las Publicaciones</h3>
+        <div class="post-container">
+            <!-- Las publicaciones se cargarán aquí desde JavaScript -->
+        </div>
+    </div>
+
+    <script src="./assets/js/app.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('id'); // ID del usuario cuyo perfil se está viendo
+            const loggedInUserId = localStorage.getItem("usuario_id"); // ID del usuario logueado
+            const token = localStorage.getItem("access_token");
+
+            if (!userId || !token) {
+                window.location.href = "register.html";
+                return;
+            }
+
+            if (userId === loggedInUserId) {
+                window.location.href = "myprofile.html";
+                return;
+            }
+
+            // Función para realizar peticiones con token
+            async function fetchWithAuth(url) {
+                const response = await fetch(url, {
+                    headers: { "Authorization": `Bearer ${token}` },
+                });
+                if (!response.ok) {
+                    console.error("Error al obtener datos de la API:", response.statusText);
+                    return null;
+                }
+                return await response.json();
+            }
+
+            // Cargar información básica del perfil
+            const profileData = await fetchWithAuth(`http://localhost:8080/Wheelz/api/api_account.php/user_profile?usuario_id=${userId}`);
+            if (profileData && profileData.user) {
+                const { nombre_usuario, avatar, biografia } = profileData.user;
+                document.getElementById("username").textContent = "@" + (nombre_usuario || "Usuario");
+                document.getElementById("profile-pic").src = avatar.startsWith("http") ? avatar : `/Wheelz/uploads/${avatar}`;
+                document.querySelector(".profile-bio").textContent = biografia || "";
+            }
+
+            // Cargar estadísticas del perfil
+            const followersData = await fetchWithAuth(`http://localhost:8080/Wheelz/api/api_account.php/count_followers?usuario_id=${userId}`);
+            const followersCount = followersData ? followersData.followers || 0 : 0;
+            const followingCount = followersData ? followersData.following || 0 : 0;
+            document.querySelector(".profile-followers-count").textContent = `${followersCount} seguidores`;
+            document.querySelector(".profile-following-count").textContent = `${followingCount} seguidos`;
+
+            const postsData = await fetchWithAuth(`http://localhost:8080/Wheelz/api/api_account.php/count_posts?usuario_id=${userId}`);
+            const totalPosts = postsData ? postsData['Publicaciones total'] || 0 : 0;
+            document.querySelector(".profile-posts-count").textContent = `${totalPosts} publicaciones`;
+
+            // Cargar publicaciones del usuario (posts, eventos y foros)
+            const publicacionesData = await fetchWithAuth(`http://localhost:8080/Wheelz/api/api_account.php/all_posts?usuario_id=${userId}`);
+            const publicaciones = publicacionesData ? publicacionesData['publicaciones'] || [] : [];
+            const postContainer = document.querySelector(".post-container");
+
+            if (publicaciones.length === 0) {
+                postContainer.innerHTML = "<p>No hay publicaciones disponibles.</p>";
+            } else {
+                publicaciones.forEach(pub => {
+                    let contentElement;
+                    switch (pub.type) {
+                        case "post":
+                            contentElement = createPostElement(pub);
+                            break;
+                        case "event":
+                            contentElement = createEventElement(pub);
+                            break;
+                        case "forum":
+                            contentElement = createForumElement(pub);
+                            break;
+                        default:
+                            console.warn("Tipo desconocido:", pub.type);
+                            return;
+                    }
+                    postContainer.appendChild(contentElement);
+                });
+            }
+
+            // Crear elemento de publicaciones (posts)
+            function createPostElement(post) {
+                const postElement = document.createElement("div");
+                postElement.classList.add("publication-container");
+
+                const postAuthor = post.nombre_usuario || "Usuario";
+                const postAvatar = post.avatar || "/Wheelz/uploads/default-image.png";
+                const postImage = post.imagen
+                    ? `<div class="media-content"><img src="${post.imagen}" alt="Imagen del post" onerror="this.style.display='none';"/></div>`
+                    : "";
+
+                postElement.innerHTML = `
+                        <div class="post">
+                            <div class="post-header">
+                                <div class="profile-pic">
+                                    <img src="${postAvatar}" alt="Foto de perfil" class="profile-image">
+                                </div>
+                                <h3 class="nombre_usuario">${postAuthor}</h3>
+                                <button class="report-btn abrir-reporte">
+                                    <img src="https://www.svgrepo.com/show/479045/exclamation-mark.svg" alt="Reportar">
+                                </button>
+                            </div>
+                            ${postImage}
+                            <div class="post-content">
+                                <p>${post.contenido || ""}</p>
+                                <span class="date">Fecha de Creación: ${post.created_at}</span>
+                            </div>
+                            <div class="post-footer">
+                                <button class="like-btn">
+                                    <img src="https://www.svgrepo.com/show/473234/heart.svg" alt="Me gusta" class="heart-icon">
+                                </button>
+                                <button class="comment-btn">
+                                    <img src="https://www.svgrepo.com/show/473144/comment-right.svg" alt="Comentarios">
+                                </button>
+                                <button>
+                                    <img src="https://www.svgrepo.com/show/379628/share.svg" alt="Compartir">
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                // Lógica de interacción para el botón de "Me gusta"
+                const likeButton = postElement.querySelector('.like-btn');
+                const heartIcon = likeButton.querySelector('.heart-icon');
+
+                likeButton.addEventListener('click', function () {
+                    likeButton.classList.toggle('liked');
+                    heartIcon.src = likeButton.classList.contains('liked')
+                        ? 'https://www.svgrepo.com/show/473235/heart-filled.svg'
+                        : 'https://www.svgrepo.com/show/473234/heart.svg';
+                });
+                return postElement;
+            }
+
+            // Crear elemento de eventos
+            function createEventElement(event) {
+                const eventElement = document.createElement("div");
+                eventElement.classList.add("event-card");
+
+                const titulo = event.nombre_evento || "Sin título";
+                const descripcion = event.contenido || "Sin descripción";
+                const fechaHora = event.fecha_hora || "Fecha no disponible";
+                const ubicacion = event.ubicacion || "Ubicación no disponible";
+                const autor = event.nombre_usuario || "Autor desconocido";
+
+                eventElement.innerHTML = `
+                    <h2 class="event-title">${titulo}</h2>
+                    <p class="event-description">${descripcion}</p>
+                    <div class="event-details">
+                        <span class="event-detail">Fecha y Hora: ${fechaHora}</span>
+                        <span class="event-detail">Ubicación: ${ubicacion}</span>
+                        <span class="event-detail">Autor: ${autor}</span>
+                    </div>
+                    <div id="map-${event.id}" class="event-map"></div>
+                `;
+
+                if (ubicacion) {
+                    initializeMap(`map-${event.id}`, ubicacion);
+                }
+                return eventElement;
+            }
+
+            // Crear elemento de foros
+            function createForumElement(forum) {
+                const forumElement = document.createElement("div");
+                forumElement.classList.add("forum-post");
+
+                const titulo = forum.titulo || "Sin título";
+                const contenido = forum.contenido || "Sin contenido";
+                const autor = forum.nombre_usuario || "Desconocido";
+                const createdAt = forum.created_at || "Fecha no disponible";
+                const hashtags = forum.hashtag
+                    ? forum.hashtag.split(',').map(tag => `<span class="tag">#${tag.trim()}</span>`).join(' ')
+                    : "";
+
+                forumElement.innerHTML = `
+                    <div class="post-header-foro">
+                        <div>
+                            <h2 class="post-title">${titulo}</h2>
+                            <p class="post-meta">Publicado por ${autor} el ${createdAt}</p>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>${contenido}</p>
+                    </div>
+                    <div class="post-tags">
+                        ${hashtags}
+                    </div>
+                `;
+                return forumElement;
+            }
+
+            // Inicializar mapas para eventos
+            function initializeMap(containerId, location) {
+                fetch(`https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=1ebe402d9bd04b219a659b39ea8a8ba1`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.results.length > 0) {
+                            const { lat, lng } = data.results[0].geometry;
+                            const map = L.map(containerId).setView([lat, lng], 13);
+
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            }).addTo(map);
+
+                            L.marker([lat, lng]).addTo(map).bindPopup(location).openPopup();
+                        } else {
+                            console.error("Ubicación no encontrada para:", location);
+                        }
+                    })
+                    .catch(err => console.error("Error al cargar el mapa:", err));
+            }
+
+
+            // Manejo del botón de seguir/no seguir
+            const followBtn = document.getElementById("follow-btn");
+            async function checkFollowStatus() {
+                try {
+                    const response = await fetch(
+                        `http://localhost:8080/Wheelz/api/api_account.php/check_follow_status?follower_id=${loggedInUserId}&followed_id=${userId}`,
+                        { method: "GET" } // Asegurarse de incluir el método GET
+                    );
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log("Estado de seguimiento:", data);
+                        followBtn.textContent = data.isFollowing ? "Dejar de seguir" : "Seguir";
+                    } else {
+                        console.error("Error al verificar estado de seguimiento:", response.statusText);
+                        followBtn.textContent = "Seguir"; // Asume que no sigue al usuario
+                    }
+                } catch (error) {
+                    console.error("Error al verificar estado de seguimiento:", error);
+                    followBtn.textContent = "Seguir"; // Asume que no sigue al usuario
+                }
+            }
+
+
+            followBtn.addEventListener("click", async function () {
+                const isFollowing = followBtn.textContent === "Dejar de seguir";
+                const method = isFollowing ? "DELETE" : "POST";
+                const endpoint = isFollowing ? "unfollow" : "follow";
+
+                const response = await fetch(`http://localhost:8080/Wheelz/api/api_account.php/${endpoint}`, {
+                    method: method,
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ usuario_id: loggedInUserId, seguido_id: userId }),
+                });
+
+                if (response.ok) {
+                    location.reload();
+                }
+            });
+
+            await checkFollowStatus();
+        });
+    </script>
+</body>
+
+</html>

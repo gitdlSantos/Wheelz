@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed de Red Social</title>
+    <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+    <main>
+
+        <div class="contenedor-ventana" id="contenedor-ventana">
+            <div class="ventana-reporte">
+                <button id="reportar-publicacion" onclick="">Reportar Publicacion</button>
+                <p></p>
+                <button id="cancelar-reporte">Cancelar</button>
+            </div>
+        </div>
+
+        <div class="new-post-container">
+            <div class="new-post-section">
+                <form id="newPostForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <div id="postContent" contenteditable="true" class="editable" placeholder="Escribe algo...">
+                        </div>
+                    </div>
+                    <div class="form-group file-input">
+                        <label for="postImages" class="image-upload-label">Selecciona una imagen</label>
+                        <input type="file" id="postImages" name="postImages" accept="image/*">
+                    </div>
+                    <button type="submit" class="post-submit-btn">Publicar</button>
+                </form>
+            </div>
+
+            <div class="preview-post-section">
+                <h2>Vista Previa del Post</h2>
+                <div id="preview-post">
+                    <!-- Aquí se generará la vista previa dinámica del post -->
+                </div>
+            </div>
+        </div>
+
+        <div class="post-container" id="postContainer">
+            <!-- Aquí se añadirán los posts desde JavaScript -->
+        </div>
+
+        <!-- Ejemplo de un post estático -->
+        <div class="post-container">
+            <div class="comments-section">
+                <h3>Comentarios</h3>
+                <div class="comment">
+                    <div class="comment-header">
+                        <img src="https://via.placeholder.com/30" alt="Foto de perfil" class="comment-profile-pic">
+                        <span class="comment-username">usuario123</span>
+                    </div>
+                    <div class="comment-content">
+                        <p>¡Gran publicación! Me encanta el contenido.</p>
+                    </div>
+                    <div class="comment-actions">
+                        <button class="comment-like-btn">Me gusta</button>
+                    </div>
+                </div>
+                <div class="new-comment-form">
+                    <input type="text" class="new-comment-input" placeholder="Escribe un comentario...">
+                    <div class="new-comment-actions">
+                        <button class="post-comment-btn">Comentar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de perfil de usuario -->
+    <div id="profileModal" class="modal">
+        <div id="modalContent" class="modal-content">
+            <span id="closeBtn" class="close-btn"
+                onclick="document.getElementById('profileModal').classList.remove('show')">×</span>
+            <img id="profileAvatar" src="" alt="Avatar" class="profile-avatar">
+            <h2 id="profileUsername" class="profile-username"></h2>
+            <p id="profileBio" class="profile-bio"></p>
+            <div id="userPostsContainer"></div>
+        </div>
+    </div>
+
+    <script src="./assets/js/app.js"></script>
+    <script>
+        fetch('./partials/header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("header-placeholder").innerHTML = data;
+            })
+            .catch(error => console.error('Error cargando el header:', error));
+    </script>
+</body>
+
+</html>

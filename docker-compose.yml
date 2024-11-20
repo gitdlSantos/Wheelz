@@ -1,0 +1,135 @@
+services:
+
+#--------------------------------------------------
+#-------------------- DATABASE --------------------
+  # MySQL Master
+  database_master:
+    image: mysql:8.0.30
+    container_name: "database_master"
+    restart: unless-stopped
+    ports:
+      - 3308:3306  # Cambié el puerto para evitar el conflicto
+    volumes:
+      - mysqldata_master:/var/lib/mysql
+      - ./master.cnf:/etc/my.cnf
+      - nfs_data:/backups  # Montamos el directorio NFS en el contenedor de la base de datos para almacenar los backups
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootdb
+      - MYSQL_USER=dbuser
+      - MYSQL_DATABASE=wheelz
+      - MYSQL_PASSWORD=rootdb
+    networks:
+      - mynetwork
+
+  # MySQL Slave
+  database_slave:
+    image: mysql:8.0.30
+    container_name: "database_slave"
+    restart: unless-stopped
+    depends_on:
+      - database_master
+    ports:
+      - 3307:3306
+    volumes:
+      - mysqldata_slave:/var/lib/mysql
+      - ./slave.cnf:/etc/my.cnf
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootdb
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=rootdb
+    networks:
+      - mynetwork
+#-------------------- DATABASE --------------------
+#--------------------------------------------------
+
+
+
+#--------------------------------------------------
+#------------------- SERVER WEB -------------------
+  php:
+    image: php:8.0-apache
+    volumes:
+      - ./api:/var/www/html
+    networks:
+      - mynetwork
+    depends_on:
+      - database_master
+    ports:
+      - "8080:80"
+
+  web:
+    image: php:8.0-apache
+    volumes:
+      - ./uploads:/var/www/uploads
+      - ./web:/var/www/html
+    networks:
+      - mynetwork
+    depends_on:
+      - database_master
+    ports:
+      - "8081:80"
+
+#------------------- SERVER WEB -------------------
+#--------------------------------------------------
+
+
+
+#--------------------------------------------------
+#----------------  NFS FOR BACKUPS ----------------
+# NFS Server for Backups
+  nfs_server:
+    image: itsthenetwork/nfs-server-alpine
+    container_name: "nfs_server"
+    environment:
+      - SHARED_DIRECTORY=/exports
+    volumes:
+      - nfs_data:/exports  # Este volumen se usa para almacenar datos compartidos
+    ports:
+      - "2049:2049"  # Exponemos el puerto NFS
+    networks:
+      - mynetwork
+
+#----------------  NFS FOR BACKUPS ----------------
+#--------------------------------------------------
+
+
+
+#--------------------------------------------------
+#------------------- MONITOREO --------------------
+  # Prometheus
+  prometheus:
+    image: prom/prometheus
+    container_name: "prometheus"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - mynetwork
+
+  # Grafana
+  grafana:
+    image: grafana/grafana
+    container_name: "grafana"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - mynetwork
+
+#------------------- MONITOREO --------------------
+#--------------------------------------------------
+
+networks:
+  mynetwork:
+    driver: bridge
+
+volumes:
+  nfs_data:  # Este volumen almacena los datos de NFS
+  db-data:
+  mysqldata_master:
+  mysqldata_slave:
+  grafana_data:  # Añadí el volumen para Grafana
